@@ -333,5 +333,5 @@ def generate_html(data, output_path):
 if __name__ == "__main__":
     data_file = "/Users/tenzinpaljor/Desktop/Personal /Data Analyse with Yang/data/data-KS-client 1 - Sheet1.csv"
     results = analyze_data(data_file)
-    generate_html(results, "/Users/tenzinpaljor/Desktop/Personal /Data Analyse with Yang/dashboard.html")
-    print("Updated Dashboard generated: dashboard.html")
+    generate_html(results, "/Users/tenzinpaljor/Desktop/Personal /Data Analyse with Yang/index.html")
+    print("Updated Dashboard generated: index.html")
