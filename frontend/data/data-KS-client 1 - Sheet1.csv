@@ -162,3 +162,128 @@ Bank & Merchant Fees,Expenses,4500,National Response Restoration
 Bad Debt,Expenses,5000,National Response Restoration
 Depreciation,Expenses,10000,National Response Restoration
 Interest Expense,Expenses,5000,National Response Restoration
+4000 · Mitigation Revenue,Income,9167,Lakeshore Restoration LLC
+4010 · Reconstruction Revenue,Income,5000,Lakeshore Restoration LLC
+4020 · Contents / Pack-out Revenue,Income,1667,Lakeshore Restoration LLC
+4030 · Other Revenue,Income,833,Lakeshore Restoration LLC
+5000 · Direct Labor,Cost of Goods Sold,3150,Lakeshore Restoration LLC
+"5010 · Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,700,Lakeshore Restoration LLC
+5020 · Subcontractors,Cost of Goods Sold,1050,Lakeshore Restoration LLC
+5030 · Materials & Supplies,Cost of Goods Sold,1400,Lakeshore Restoration LLC
+5040 · Equipment Rental,Cost of Goods Sold,420,Lakeshore Restoration LLC
+5050 · Disposal / Dump Fees,Cost of Goods Sold,280,Lakeshore Restoration LLC
+6000 · Wages - Administrative / Indirect,Expenses,1774,Lakeshore Restoration LLC
+6010 · Payroll Taxes - Indirect,Expenses,253,Lakeshore Restoration LLC
+6100 · Rent / Lease,Expenses,443,Lakeshore Restoration LLC
+6110 · Utilities,Expenses,127,Lakeshore Restoration LLC
+6120 · Insurance - General Liability,Expenses,253,Lakeshore Restoration LLC
+6130 · Insurance - Auto,Expenses,127,Lakeshore Restoration LLC
+6140 · Health / Benefits (Non-COGS),Expenses,317,Lakeshore Restoration LLC
+6200 · Vehicle Fuel & Maintenance,Expenses,380,Lakeshore Restoration LLC
+6300 · Marketing & Advertising,Expenses,507,Lakeshore Restoration LLC
+6400 · Office Supplies,Expenses,127,Lakeshore Restoration LLC
+6410 · Software Subscriptions,Expenses,127,Lakeshore Restoration LLC
+6500 · Professional Fees,Expenses,190,Lakeshore Restoration LLC
+6600 · Repairs & Maintenance,Expenses,127,Lakeshore Restoration LLC
+6700 · Depreciation,Expenses,127,Lakeshore Restoration LLC
+6900 · Miscellaneous,Expenses,1455,Lakeshore Restoration LLC
+4000 · Mitigation Revenue,Income,37500,Restoration 1
+4010 · Reconstruction Revenue,Income,33333,Restoration 1
+4020 · Contents / Pack-out Revenue,Income,8333,Restoration 1
+4030 · Other Revenue,Income,4167,Restoration 1
+5000 · Direct Labor,Cost of Goods Sold,16100,Restoration 1
+"5010 · Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,3833,Restoration 1
+5020 · Subcontractors,Cost of Goods Sold,8433,Restoration 1
+5030 · Materials & Supplies,Cost of Goods Sold,6900,Restoration 1
+5040 · Equipment Rental,Cost of Goods Sold,1917,Restoration 1
+5050 · Disposal / Dump Fees,Cost of Goods Sold,1150,Restoration 1
+6000 · Wages - Administrative / Indirect,Expenses,8500,Restoration 1
+6010 · Payroll Taxes - Indirect,Expenses,1417,Restoration 1
+6100 · Rent / Lease,Expenses,1983,Restoration 1
+6110 · Utilities,Expenses,567,Restoration 1
+6120 · Insurance - General Liability,Expenses,1133,Restoration 1
+6130 · Insurance - Auto,Expenses,567,Restoration 1
+6140 · Health / Benefits (Non-COGS),Expenses,1700,Restoration 1
+6200 · Vehicle Fuel & Maintenance,Expenses,1700,Restoration 1
+6300 · Marketing & Advertising,Expenses,2267,Restoration 1
+6400 · Office Supplies,Expenses,567,Restoration 1
+6410 · Software Subscriptions,Expenses,567,Restoration 1
+6500 · Professional Fees,Expenses,850,Restoration 1
+6600 · Repairs & Maintenance,Expenses,850,Restoration 1
+6700 · Depreciation,Expenses,567,Restoration 1
+6900 · Miscellaneous,Expenses,5098,Restoration 1
+4000 · Mitigation Revenue,Income,100000,Paul Davis Restoration
+4010 · Reconstruction Revenue,Income,112500,Paul Davis Restoration
+4020 · Contents / Pack-out Revenue,Income,25000,Paul Davis Restoration
+4030 · Other Revenue,Income,12500,Paul Davis Restoration
+5000 · Direct Labor,Cost of Goods Sold,48000,Paul Davis Restoration
+"5010 · Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,12000,Paul Davis Restoration
+5020 · Subcontractors,Cost of Goods Sold,30000,Paul Davis Restoration
+5030 · Materials & Supplies,Cost of Goods Sold,20400,Paul Davis Restoration
+5040 · Equipment Rental,Cost of Goods Sold,6000,Paul Davis Restoration
+5050 · Disposal / Dump Fees,Cost of Goods Sold,3600,Paul Davis Restoration
+6000 · Wages - Administrative / Indirect,Expenses,25600,Paul Davis Restoration
+6010 · Payroll Taxes - Indirect,Expenses,4000,Paul Davis Restoration
+6100 · Rent / Lease,Expenses,6400,Paul Davis Restoration
+6110 · Utilities,Expenses,1600,Paul Davis Restoration
+6120 · Insurance - General Liability,Expenses,3200,Paul Davis Restoration
+6130 · Insurance - Auto,Expenses,1600,Paul Davis Restoration
+6140 · Health / Benefits (Non-COGS),Expenses,5600,Paul Davis Restoration
+6200 · Vehicle Fuel & Maintenance,Expenses,4800,Paul Davis Restoration
+6300 · Marketing & Advertising,Expenses,6400,Paul Davis Restoration
+6400 · Office Supplies,Expenses,1600,Paul Davis Restoration
+6410 · Software Subscriptions,Expenses,1600,Paul Davis Restoration
+6500 · Professional Fees,Expenses,2400,Paul Davis Restoration
+6600 · Repairs & Maintenance,Expenses,2400,Paul Davis Restoration
+6700 · Depreciation,Expenses,1600,Paul Davis Restoration
+6900 · Miscellaneous,Expenses,11200,Paul Davis Restoration
+4000 · Mitigation Revenue,Income,175000,Rainbow Restoration
+4010 · Reconstruction Revenue,Income,250000,Rainbow Restoration
+4020 · Contents / Pack-out Revenue,Income,50000,Rainbow Restoration
+4030 · Other Revenue,Income,25000,Rainbow Restoration
+5000 · Direct Labor,Cost of Goods Sold,95000,Rainbow Restoration
+"5010 · Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,25000,Rainbow Restoration
+5020 · Subcontractors,Cost of Goods Sold,70000,Rainbow Restoration
+5030 · Materials & Supplies,Cost of Goods Sold,40000,Rainbow Restoration
+5040 · Equipment Rental,Cost of Goods Sold,12500,Rainbow Restoration
+5050 · Disposal / Dump Fees,Cost of Goods Sold,7500,Rainbow Restoration
+6000 · Wages - Administrative / Indirect,Expenses,51000,Rainbow Restoration
+6010 · Payroll Taxes - Indirect,Expenses,7500,Rainbow Restoration
+6100 · Rent / Lease,Expenses,13500,Rainbow Restoration
+6110 · Utilities,Expenses,3000,Rainbow Restoration
+6120 · Insurance - General Liability,Expenses,6000,Rainbow Restoration
+6130 · Insurance - Auto,Expenses,3000,Rainbow Restoration
+6140 · Health / Benefits (Non-COGS),Expenses,12000,Rainbow Restoration
+6200 · Vehicle Fuel & Maintenance,Expenses,9000,Rainbow Restoration
+6300 · Marketing & Advertising,Expenses,12000,Rainbow Restoration
+6400 · Office Supplies,Expenses,3000,Rainbow Restoration
+6410 · Software Subscriptions,Expenses,3000,Rainbow Restoration
+6500 · Professional Fees,Expenses,4500,Rainbow Restoration
+6600 · Repairs & Maintenance,Expenses,4500,Rainbow Restoration
+6700 · Depreciation,Expenses,3000,Rainbow Restoration
+6900 · Miscellaneous,Expenses,15000,Rainbow Restoration
+4000 · Mitigation Revenue,Income,250000,BELFOR Property Restoration
+4010 · Reconstruction Revenue,Income,458333,BELFOR Property Restoration
+4020 · Contents / Pack-out Revenue,Income,83333,BELFOR Property Restoration
+4030 · Other Revenue,Income,41667,BELFOR Property Restoration
+5000 · Direct Labor,Cost of Goods Sold,156000,BELFOR Property Restoration
+"5010 · Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,43333,BELFOR Property Restoration
+5020 · Subcontractors,Cost of Goods Sold,138667,BELFOR Property Restoration
+5030 · Materials & Supplies,Cost of Goods Sold,65000,BELFOR Property Restoration
+5040 · Equipment Rental,Cost of Goods Sold,17333,BELFOR Property Restoration
+5050 · Disposal / Dump Fees,Cost of Goods Sold,13000,BELFOR Property Restoration
+6000 · Wages - Administrative / Indirect,Expenses,84000,BELFOR Property Restoration
+6010 · Payroll Taxes - Indirect,Expenses,11667,BELFOR Property Restoration
+6100 · Rent / Lease,Expenses,23333,BELFOR Property Restoration
+6110 · Utilities,Expenses,4667,BELFOR Property Restoration
+6120 · Insurance - General Liability,Expenses,9333,BELFOR Property Restoration
+6130 · Insurance - Auto,Expenses,4667,BELFOR Property Restoration
+6140 · Health / Benefits (Non-COGS),Expenses,21000,BELFOR Property Restoration
+6200 · Vehicle Fuel & Maintenance,Expenses,14000,BELFOR Property Restoration
+6300 · Marketing & Advertising,Expenses,18667,BELFOR Property Restoration
+6400 · Office Supplies,Expenses,4667,BELFOR Property Restoration
+6410 · Software Subscriptions,Expenses,4667,BELFOR Property Restoration
+6500 · Professional Fees,Expenses,7000,BELFOR Property Restoration
+6600 · Repairs & Maintenance,Expenses,7000,BELFOR Property Restoration
+6700 · Depreciation,Expenses,4667,BELFOR Property Restoration
+6900 · Miscellaneous,Expenses,13998,BELFOR Property Restoration

@@ -1,0 +1,601 @@
+﻿Account,Category,Amount,Company,Month,Year
+Mitigation Revenue,Income,9860,SoloDry Restoration (Sample),Jan,2025
+Mitigation Revenue,Income,10508,SoloDry Restoration (Sample),Feb,2025
+Mitigation Revenue,Income,7035,SoloDry Restoration (Sample),Mar,2025
+Mitigation Revenue,Income,8494,SoloDry Restoration (Sample),Apr,2025
+Mitigation Revenue,Income,7163,SoloDry Restoration (Sample),May,2025
+Mitigation Revenue,Income,7237,SoloDry Restoration (Sample),Jun,2025
+Mitigation Revenue,Income,7635,SoloDry Restoration (Sample),Jul,2025
+Mitigation Revenue,Income,8175,SoloDry Restoration (Sample),Aug,2025
+Mitigation Revenue,Income,9458,SoloDry Restoration (Sample),Sep,2025
+Mitigation Revenue,Income,9222,SoloDry Restoration (Sample),Oct,2025
+Mitigation Revenue,Income,12241,SoloDry Restoration (Sample),Nov,2025
+Mitigation Revenue,Income,13415,SoloDry Restoration (Sample),Dec,2025
+Reconstruction Revenue,Income,6004,SoloDry Restoration (Sample),Jan,2025
+Reconstruction Revenue,Income,5997,SoloDry Restoration (Sample),Feb,2025
+Reconstruction Revenue,Income,3965,SoloDry Restoration (Sample),Mar,2025
+Reconstruction Revenue,Income,4495,SoloDry Restoration (Sample),Apr,2025
+Reconstruction Revenue,Income,4299,SoloDry Restoration (Sample),May,2025
+Reconstruction Revenue,Income,4187,SoloDry Restoration (Sample),Jun,2025
+Reconstruction Revenue,Income,3732,SoloDry Restoration (Sample),Jul,2025
+Reconstruction Revenue,Income,4505,SoloDry Restoration (Sample),Aug,2025
+Reconstruction Revenue,Income,5208,SoloDry Restoration (Sample),Sep,2025
+Reconstruction Revenue,Income,5188,SoloDry Restoration (Sample),Oct,2025
+Reconstruction Revenue,Income,5531,SoloDry Restoration (Sample),Nov,2025
+Reconstruction Revenue,Income,6927,SoloDry Restoration (Sample),Dec,2025
+Contents / Pack-out Revenue,Income,1614,SoloDry Restoration (Sample),Jan,2025
+Contents / Pack-out Revenue,Income,1930,SoloDry Restoration (Sample),Feb,2025
+Contents / Pack-out Revenue,Income,1243,SoloDry Restoration (Sample),Mar,2025
+Contents / Pack-out Revenue,Income,1525,SoloDry Restoration (Sample),Apr,2025
+Contents / Pack-out Revenue,Income,1338,SoloDry Restoration (Sample),May,2025
+Contents / Pack-out Revenue,Income,1348,SoloDry Restoration (Sample),Jun,2025
+Contents / Pack-out Revenue,Income,1204,SoloDry Restoration (Sample),Jul,2025
+Contents / Pack-out Revenue,Income,1418,SoloDry Restoration (Sample),Aug,2025
+Contents / Pack-out Revenue,Income,1781,SoloDry Restoration (Sample),Sep,2025
+Contents / Pack-out Revenue,Income,1799,SoloDry Restoration (Sample),Oct,2025
+Contents / Pack-out Revenue,Income,1879,SoloDry Restoration (Sample),Nov,2025
+Contents / Pack-out Revenue,Income,2339,SoloDry Restoration (Sample),Dec,2025
+Other Revenue,Income,1001,SoloDry Restoration (Sample),Jan,2025
+Other Revenue,Income,976,SoloDry Restoration (Sample),Feb,2025
+Other Revenue,Income,613,SoloDry Restoration (Sample),Mar,2025
+Other Revenue,Income,793,SoloDry Restoration (Sample),Apr,2025
+Other Revenue,Income,686,SoloDry Restoration (Sample),May,2025
+Other Revenue,Income,681,SoloDry Restoration (Sample),Jun,2025
+Other Revenue,Income,624,SoloDry Restoration (Sample),Jul,2025
+Other Revenue,Income,791,SoloDry Restoration (Sample),Aug,2025
+Other Revenue,Income,896,SoloDry Restoration (Sample),Sep,2025
+Other Revenue,Income,922,SoloDry Restoration (Sample),Oct,2025
+Other Revenue,Income,966,SoloDry Restoration (Sample),Nov,2025
+Other Revenue,Income,1151,SoloDry Restoration (Sample),Dec,2025
+Direct Labor,Cost of Goods Sold,4853,SoloDry Restoration (Sample),Jan,2025
+Direct Labor,Cost of Goods Sold,5448,SoloDry Restoration (Sample),Feb,2025
+Direct Labor,Cost of Goods Sold,3236,SoloDry Restoration (Sample),Mar,2025
+Direct Labor,Cost of Goods Sold,3966,SoloDry Restoration (Sample),Apr,2025
+Direct Labor,Cost of Goods Sold,3455,SoloDry Restoration (Sample),May,2025
+Direct Labor,Cost of Goods Sold,3607,SoloDry Restoration (Sample),Jun,2025
+Direct Labor,Cost of Goods Sold,3751,SoloDry Restoration (Sample),Jul,2025
+Direct Labor,Cost of Goods Sold,4383,SoloDry Restoration (Sample),Aug,2025
+Direct Labor,Cost of Goods Sold,4814,SoloDry Restoration (Sample),Sep,2025
+Direct Labor,Cost of Goods Sold,4552,SoloDry Restoration (Sample),Oct,2025
+Direct Labor,Cost of Goods Sold,5723,SoloDry Restoration (Sample),Nov,2025
+Direct Labor,Cost of Goods Sold,6339,SoloDry Restoration (Sample),Dec,2025
+Labor Burden,Cost of Goods Sold,1293,SoloDry Restoration (Sample),Jan,2025
+Labor Burden,Cost of Goods Sold,1392,SoloDry Restoration (Sample),Feb,2025
+Labor Burden,Cost of Goods Sold,910,SoloDry Restoration (Sample),Mar,2025
+Labor Burden,Cost of Goods Sold,1034,SoloDry Restoration (Sample),Apr,2025
+Labor Burden,Cost of Goods Sold,910,SoloDry Restoration (Sample),May,2025
+Labor Burden,Cost of Goods Sold,909,SoloDry Restoration (Sample),Jun,2025
+Labor Burden,Cost of Goods Sold,941,SoloDry Restoration (Sample),Jul,2025
+Labor Burden,Cost of Goods Sold,1079,SoloDry Restoration (Sample),Aug,2025
+Labor Burden,Cost of Goods Sold,1206,SoloDry Restoration (Sample),Sep,2025
+Labor Burden,Cost of Goods Sold,1190,SoloDry Restoration (Sample),Oct,2025
+Labor Burden,Cost of Goods Sold,1460,SoloDry Restoration (Sample),Nov,2025
+Labor Burden,Cost of Goods Sold,1724,SoloDry Restoration (Sample),Dec,2025
+Subcontractors,Cost of Goods Sold,1459,SoloDry Restoration (Sample),Jan,2025
+Subcontractors,Cost of Goods Sold,1568,SoloDry Restoration (Sample),Feb,2025
+Subcontractors,Cost of Goods Sold,1052,SoloDry Restoration (Sample),Mar,2025
+Subcontractors,Cost of Goods Sold,1255,SoloDry Restoration (Sample),Apr,2025
+Subcontractors,Cost of Goods Sold,1146,SoloDry Restoration (Sample),May,2025
+Subcontractors,Cost of Goods Sold,1038,SoloDry Restoration (Sample),Jun,2025
+Subcontractors,Cost of Goods Sold,1027,SoloDry Restoration (Sample),Jul,2025
+Subcontractors,Cost of Goods Sold,1148,SoloDry Restoration (Sample),Aug,2025
+Subcontractors,Cost of Goods Sold,1359,SoloDry Restoration (Sample),Sep,2025
+Subcontractors,Cost of Goods Sold,1404,SoloDry Restoration (Sample),Oct,2025
+Subcontractors,Cost of Goods Sold,1709,SoloDry Restoration (Sample),Nov,2025
+Subcontractors,Cost of Goods Sold,1942,SoloDry Restoration (Sample),Dec,2025
+Materials & Supplies,Cost of Goods Sold,2038,SoloDry Restoration (Sample),Jan,2025
+Materials & Supplies,Cost of Goods Sold,2072,SoloDry Restoration (Sample),Feb,2025
+Materials & Supplies,Cost of Goods Sold,1408,SoloDry Restoration (Sample),Mar,2025
+Materials & Supplies,Cost of Goods Sold,1746,SoloDry Restoration (Sample),Apr,2025
+Materials & Supplies,Cost of Goods Sold,1455,SoloDry Restoration (Sample),May,2025
+Materials & Supplies,Cost of Goods Sold,1408,SoloDry Restoration (Sample),Jun,2025
+Materials & Supplies,Cost of Goods Sold,1428,SoloDry Restoration (Sample),Jul,2025
+Materials & Supplies,Cost of Goods Sold,1634,SoloDry Restoration (Sample),Aug,2025
+Materials & Supplies,Cost of Goods Sold,1970,SoloDry Restoration (Sample),Sep,2025
+Materials & Supplies,Cost of Goods Sold,1967,SoloDry Restoration (Sample),Oct,2025
+Materials & Supplies,Cost of Goods Sold,2395,SoloDry Restoration (Sample),Nov,2025
+Materials & Supplies,Cost of Goods Sold,2564,SoloDry Restoration (Sample),Dec,2025
+Equipment Rental,Cost of Goods Sold,458,SoloDry Restoration (Sample),Jan,2025
+Equipment Rental,Cost of Goods Sold,488,SoloDry Restoration (Sample),Feb,2025
+Equipment Rental,Cost of Goods Sold,320,SoloDry Restoration (Sample),Mar,2025
+Equipment Rental,Cost of Goods Sold,382,SoloDry Restoration (Sample),Apr,2025
+Equipment Rental,Cost of Goods Sold,306,SoloDry Restoration (Sample),May,2025
+Equipment Rental,Cost of Goods Sold,335,SoloDry Restoration (Sample),Jun,2025
+Equipment Rental,Cost of Goods Sold,317,SoloDry Restoration (Sample),Jul,2025
+Equipment Rental,Cost of Goods Sold,373,SoloDry Restoration (Sample),Aug,2025
+Equipment Rental,Cost of Goods Sold,418,SoloDry Restoration (Sample),Sep,2025
+Equipment Rental,Cost of Goods Sold,432,SoloDry Restoration (Sample),Oct,2025
+Equipment Rental,Cost of Goods Sold,525,SoloDry Restoration (Sample),Nov,2025
+Equipment Rental,Cost of Goods Sold,631,SoloDry Restoration (Sample),Dec,2025
+Disposal / Dump Fees,Cost of Goods Sold,235,SoloDry Restoration (Sample),Jan,2025
+Disposal / Dump Fees,Cost of Goods Sold,225,SoloDry Restoration (Sample),Feb,2025
+Disposal / Dump Fees,Cost of Goods Sold,155,SoloDry Restoration (Sample),Mar,2025
+Disposal / Dump Fees,Cost of Goods Sold,191,SoloDry Restoration (Sample),Apr,2025
+Disposal / Dump Fees,Cost of Goods Sold,155,SoloDry Restoration (Sample),May,2025
+Disposal / Dump Fees,Cost of Goods Sold,164,SoloDry Restoration (Sample),Jun,2025
+Disposal / Dump Fees,Cost of Goods Sold,168,SoloDry Restoration (Sample),Jul,2025
+Disposal / Dump Fees,Cost of Goods Sold,176,SoloDry Restoration (Sample),Aug,2025
+Disposal / Dump Fees,Cost of Goods Sold,196,SoloDry Restoration (Sample),Sep,2025
+Disposal / Dump Fees,Cost of Goods Sold,202,SoloDry Restoration (Sample),Oct,2025
+Disposal / Dump Fees,Cost of Goods Sold,242,SoloDry Restoration (Sample),Nov,2025
+Disposal / Dump Fees,Cost of Goods Sold,288,SoloDry Restoration (Sample),Dec,2025
+Wages - Administrative / Indirect,Expenses,1848,SoloDry Restoration (Sample),Jan,2025
+Wages - Administrative / Indirect,Expenses,1941,SoloDry Restoration (Sample),Feb,2025
+Wages - Administrative / Indirect,Expenses,1286,SoloDry Restoration (Sample),Mar,2025
+Wages - Administrative / Indirect,Expenses,1531,SoloDry Restoration (Sample),Apr,2025
+Wages - Administrative / Indirect,Expenses,1349,SoloDry Restoration (Sample),May,2025
+Wages - Administrative / Indirect,Expenses,1345,SoloDry Restoration (Sample),Jun,2025
+Wages - Administrative / Indirect,Expenses,1320,SoloDry Restoration (Sample),Jul,2025
+Wages - Administrative / Indirect,Expenses,1489,SoloDry Restoration (Sample),Aug,2025
+Wages - Administrative / Indirect,Expenses,1734,SoloDry Restoration (Sample),Sep,2025
+Wages - Administrative / Indirect,Expenses,1713,SoloDry Restoration (Sample),Oct,2025
+Wages - Administrative / Indirect,Expenses,2062,SoloDry Restoration (Sample),Nov,2025
+Wages - Administrative / Indirect,Expenses,2383,SoloDry Restoration (Sample),Dec,2025
+Payroll Taxes - Indirect,Expenses,259,SoloDry Restoration (Sample),Jan,2025
+Payroll Taxes - Indirect,Expenses,272,SoloDry Restoration (Sample),Feb,2025
+Payroll Taxes - Indirect,Expenses,180,SoloDry Restoration (Sample),Mar,2025
+Payroll Taxes - Indirect,Expenses,214,SoloDry Restoration (Sample),Apr,2025
+Payroll Taxes - Indirect,Expenses,189,SoloDry Restoration (Sample),May,2025
+Payroll Taxes - Indirect,Expenses,188,SoloDry Restoration (Sample),Jun,2025
+Payroll Taxes - Indirect,Expenses,185,SoloDry Restoration (Sample),Jul,2025
+Payroll Taxes - Indirect,Expenses,208,SoloDry Restoration (Sample),Aug,2025
+Payroll Taxes - Indirect,Expenses,243,SoloDry Restoration (Sample),Sep,2025
+Payroll Taxes - Indirect,Expenses,240,SoloDry Restoration (Sample),Oct,2025
+Payroll Taxes - Indirect,Expenses,289,SoloDry Restoration (Sample),Nov,2025
+Payroll Taxes - Indirect,Expenses,334,SoloDry Restoration (Sample),Dec,2025
+Rent / Lease,Expenses,602,SoloDry Restoration (Sample),Jan,2025
+Rent / Lease,Expenses,601,SoloDry Restoration (Sample),Feb,2025
+Rent / Lease,Expenses,611,SoloDry Restoration (Sample),Mar,2025
+Rent / Lease,Expenses,606,SoloDry Restoration (Sample),Apr,2025
+Rent / Lease,Expenses,651,SoloDry Restoration (Sample),May,2025
+Rent / Lease,Expenses,618,SoloDry Restoration (Sample),Jun,2025
+Rent / Lease,Expenses,603,SoloDry Restoration (Sample),Jul,2025
+Rent / Lease,Expenses,594,SoloDry Restoration (Sample),Aug,2025
+Rent / Lease,Expenses,610,SoloDry Restoration (Sample),Sep,2025
+Rent / Lease,Expenses,628,SoloDry Restoration (Sample),Oct,2025
+Rent / Lease,Expenses,619,SoloDry Restoration (Sample),Nov,2025
+Rent / Lease,Expenses,589,SoloDry Restoration (Sample),Dec,2025
+Utilities,Expenses,196,SoloDry Restoration (Sample),Jan,2025
+Utilities,Expenses,195,SoloDry Restoration (Sample),Feb,2025
+Utilities,Expenses,172,SoloDry Restoration (Sample),Mar,2025
+Utilities,Expenses,190,SoloDry Restoration (Sample),Apr,2025
+Utilities,Expenses,180,SoloDry Restoration (Sample),May,2025
+Utilities,Expenses,177,SoloDry Restoration (Sample),Jun,2025
+Utilities,Expenses,168,SoloDry Restoration (Sample),Jul,2025
+Utilities,Expenses,169,SoloDry Restoration (Sample),Aug,2025
+Utilities,Expenses,166,SoloDry Restoration (Sample),Sep,2025
+Utilities,Expenses,165,SoloDry Restoration (Sample),Oct,2025
+Utilities,Expenses,165,SoloDry Restoration (Sample),Nov,2025
+Utilities,Expenses,184,SoloDry Restoration (Sample),Dec,2025
+Insurance - General Liability,Expenses,444,SoloDry Restoration (Sample),Jan,2025
+Insurance - General Liability,Expenses,433,SoloDry Restoration (Sample),Feb,2025
+Insurance - General Liability,Expenses,445,SoloDry Restoration (Sample),Mar,2025
+Insurance - General Liability,Expenses,450,SoloDry Restoration (Sample),Apr,2025
+Insurance - General Liability,Expenses,439,SoloDry Restoration (Sample),May,2025
+Insurance - General Liability,Expenses,436,SoloDry Restoration (Sample),Jun,2025
+Insurance - General Liability,Expenses,463,SoloDry Restoration (Sample),Jul,2025
+Insurance - General Liability,Expenses,471,SoloDry Restoration (Sample),Aug,2025
+Insurance - General Liability,Expenses,452,SoloDry Restoration (Sample),Sep,2025
+Insurance - General Liability,Expenses,445,SoloDry Restoration (Sample),Oct,2025
+Insurance - General Liability,Expenses,451,SoloDry Restoration (Sample),Nov,2025
+Insurance - General Liability,Expenses,446,SoloDry Restoration (Sample),Dec,2025
+Insurance - Auto,Expenses,256,SoloDry Restoration (Sample),Jan,2025
+Insurance - Auto,Expenses,252,SoloDry Restoration (Sample),Feb,2025
+Insurance - Auto,Expenses,246,SoloDry Restoration (Sample),Mar,2025
+Insurance - Auto,Expenses,260,SoloDry Restoration (Sample),Apr,2025
+Insurance - Auto,Expenses,251,SoloDry Restoration (Sample),May,2025
+Insurance - Auto,Expenses,249,SoloDry Restoration (Sample),Jun,2025
+Insurance - Auto,Expenses,251,SoloDry Restoration (Sample),Jul,2025
+Insurance - Auto,Expenses,243,SoloDry Restoration (Sample),Aug,2025
+Insurance - Auto,Expenses,257,SoloDry Restoration (Sample),Sep,2025
+Insurance - Auto,Expenses,254,SoloDry Restoration (Sample),Oct,2025
+Insurance - Auto,Expenses,255,SoloDry Restoration (Sample),Nov,2025
+Insurance - Auto,Expenses,237,SoloDry Restoration (Sample),Dec,2025
+Health / Benefits (Non-COGS),Expenses,250,SoloDry Restoration (Sample),Jan,2025
+Health / Benefits (Non-COGS),Expenses,228,SoloDry Restoration (Sample),Feb,2025
+Health / Benefits (Non-COGS),Expenses,247,SoloDry Restoration (Sample),Mar,2025
+Health / Benefits (Non-COGS),Expenses,243,SoloDry Restoration (Sample),Apr,2025
+Health / Benefits (Non-COGS),Expenses,247,SoloDry Restoration (Sample),May,2025
+Health / Benefits (Non-COGS),Expenses,253,SoloDry Restoration (Sample),Jun,2025
+Health / Benefits (Non-COGS),Expenses,251,SoloDry Restoration (Sample),Jul,2025
+Health / Benefits (Non-COGS),Expenses,260,SoloDry Restoration (Sample),Aug,2025
+Health / Benefits (Non-COGS),Expenses,238,SoloDry Restoration (Sample),Sep,2025
+Health / Benefits (Non-COGS),Expenses,254,SoloDry Restoration (Sample),Oct,2025
+Health / Benefits (Non-COGS),Expenses,244,SoloDry Restoration (Sample),Nov,2025
+Health / Benefits (Non-COGS),Expenses,231,SoloDry Restoration (Sample),Dec,2025
+Vehicle Fuel & Maintenance,Expenses,417,SoloDry Restoration (Sample),Jan,2025
+Vehicle Fuel & Maintenance,Expenses,417,SoloDry Restoration (Sample),Feb,2025
+Vehicle Fuel & Maintenance,Expenses,256,SoloDry Restoration (Sample),Mar,2025
+Vehicle Fuel & Maintenance,Expenses,303,SoloDry Restoration (Sample),Apr,2025
+Vehicle Fuel & Maintenance,Expenses,290,SoloDry Restoration (Sample),May,2025
+Vehicle Fuel & Maintenance,Expenses,301,SoloDry Restoration (Sample),Jun,2025
+Vehicle Fuel & Maintenance,Expenses,254,SoloDry Restoration (Sample),Jul,2025
+Vehicle Fuel & Maintenance,Expenses,283,SoloDry Restoration (Sample),Aug,2025
+Vehicle Fuel & Maintenance,Expenses,338,SoloDry Restoration (Sample),Sep,2025
+Vehicle Fuel & Maintenance,Expenses,369,SoloDry Restoration (Sample),Oct,2025
+Vehicle Fuel & Maintenance,Expenses,412,SoloDry Restoration (Sample),Nov,2025
+Vehicle Fuel & Maintenance,Expenses,434,SoloDry Restoration (Sample),Dec,2025
+Marketing & Advertising,Expenses,432,SoloDry Restoration (Sample),Jan,2025
+Marketing & Advertising,Expenses,381,SoloDry Restoration (Sample),Feb,2025
+Marketing & Advertising,Expenses,226,SoloDry Restoration (Sample),Mar,2025
+Marketing & Advertising,Expenses,337,SoloDry Restoration (Sample),Apr,2025
+Marketing & Advertising,Expenses,242,SoloDry Restoration (Sample),May,2025
+Marketing & Advertising,Expenses,313,SoloDry Restoration (Sample),Jun,2025
+Marketing & Advertising,Expenses,246,SoloDry Restoration (Sample),Jul,2025
+Marketing & Advertising,Expenses,258,SoloDry Restoration (Sample),Aug,2025
+Marketing & Advertising,Expenses,321,SoloDry Restoration (Sample),Sep,2025
+Marketing & Advertising,Expenses,368,SoloDry Restoration (Sample),Oct,2025
+Marketing & Advertising,Expenses,441,SoloDry Restoration (Sample),Nov,2025
+Marketing & Advertising,Expenses,423,SoloDry Restoration (Sample),Dec,2025
+Office Supplies,Expenses,128,SoloDry Restoration (Sample),Jan,2025
+Office Supplies,Expenses,121,SoloDry Restoration (Sample),Feb,2025
+Office Supplies,Expenses,114,SoloDry Restoration (Sample),Mar,2025
+Office Supplies,Expenses,132,SoloDry Restoration (Sample),Apr,2025
+Office Supplies,Expenses,121,SoloDry Restoration (Sample),May,2025
+Office Supplies,Expenses,113,SoloDry Restoration (Sample),Jun,2025
+Office Supplies,Expenses,134,SoloDry Restoration (Sample),Jul,2025
+Office Supplies,Expenses,118,SoloDry Restoration (Sample),Aug,2025
+Office Supplies,Expenses,115,SoloDry Restoration (Sample),Sep,2025
+Office Supplies,Expenses,122,SoloDry Restoration (Sample),Oct,2025
+Office Supplies,Expenses,125,SoloDry Restoration (Sample),Nov,2025
+Office Supplies,Expenses,140,SoloDry Restoration (Sample),Dec,2025
+Software Subscriptions,Expenses,136,SoloDry Restoration (Sample),Jan,2025
+Software Subscriptions,Expenses,120,SoloDry Restoration (Sample),Feb,2025
+Software Subscriptions,Expenses,113,SoloDry Restoration (Sample),Mar,2025
+Software Subscriptions,Expenses,128,SoloDry Restoration (Sample),Apr,2025
+Software Subscriptions,Expenses,130,SoloDry Restoration (Sample),May,2025
+Software Subscriptions,Expenses,111,SoloDry Restoration (Sample),Jun,2025
+Software Subscriptions,Expenses,128,SoloDry Restoration (Sample),Jul,2025
+Software Subscriptions,Expenses,121,SoloDry Restoration (Sample),Aug,2025
+Software Subscriptions,Expenses,111,SoloDry Restoration (Sample),Sep,2025
+Software Subscriptions,Expenses,110,SoloDry Restoration (Sample),Oct,2025
+Software Subscriptions,Expenses,119,SoloDry Restoration (Sample),Nov,2025
+Software Subscriptions,Expenses,139,SoloDry Restoration (Sample),Dec,2025
+Professional Fees,Expenses,295,SoloDry Restoration (Sample),Jan,2025
+Professional Fees,Expenses,226,SoloDry Restoration (Sample),Feb,2025
+Professional Fees,Expenses,260,SoloDry Restoration (Sample),Mar,2025
+Professional Fees,Expenses,310,SoloDry Restoration (Sample),Apr,2025
+Professional Fees,Expenses,244,SoloDry Restoration (Sample),May,2025
+Professional Fees,Expenses,274,SoloDry Restoration (Sample),Jun,2025
+Professional Fees,Expenses,263,SoloDry Restoration (Sample),Jul,2025
+Professional Fees,Expenses,262,SoloDry Restoration (Sample),Aug,2025
+Professional Fees,Expenses,257,SoloDry Restoration (Sample),Sep,2025
+Professional Fees,Expenses,267,SoloDry Restoration (Sample),Oct,2025
+Professional Fees,Expenses,218,SoloDry Restoration (Sample),Nov,2025
+Professional Fees,Expenses,234,SoloDry Restoration (Sample),Dec,2025
+Repairs & Maintenance,Expenses,122,SoloDry Restoration (Sample),Jan,2025
+Repairs & Maintenance,Expenses,124,SoloDry Restoration (Sample),Feb,2025
+Repairs & Maintenance,Expenses,133,SoloDry Restoration (Sample),Mar,2025
+Repairs & Maintenance,Expenses,121,SoloDry Restoration (Sample),Apr,2025
+Repairs & Maintenance,Expenses,102,SoloDry Restoration (Sample),May,2025
+Repairs & Maintenance,Expenses,91,SoloDry Restoration (Sample),Jun,2025
+Repairs & Maintenance,Expenses,153,SoloDry Restoration (Sample),Jul,2025
+Repairs & Maintenance,Expenses,115,SoloDry Restoration (Sample),Aug,2025
+Repairs & Maintenance,Expenses,136,SoloDry Restoration (Sample),Sep,2025
+Repairs & Maintenance,Expenses,128,SoloDry Restoration (Sample),Oct,2025
+Repairs & Maintenance,Expenses,112,SoloDry Restoration (Sample),Nov,2025
+Repairs & Maintenance,Expenses,94,SoloDry Restoration (Sample),Dec,2025
+Depreciation,Expenses,251,SoloDry Restoration (Sample),Jan,2025
+Depreciation,Expenses,249,SoloDry Restoration (Sample),Feb,2025
+Depreciation,Expenses,247,SoloDry Restoration (Sample),Mar,2025
+Depreciation,Expenses,249,SoloDry Restoration (Sample),Apr,2025
+Depreciation,Expenses,252,SoloDry Restoration (Sample),May,2025
+Depreciation,Expenses,253,SoloDry Restoration (Sample),Jun,2025
+Depreciation,Expenses,251,SoloDry Restoration (Sample),Jul,2025
+Depreciation,Expenses,251,SoloDry Restoration (Sample),Aug,2025
+Depreciation,Expenses,251,SoloDry Restoration (Sample),Sep,2025
+Depreciation,Expenses,247,SoloDry Restoration (Sample),Oct,2025
+Depreciation,Expenses,247,SoloDry Restoration (Sample),Nov,2025
+Depreciation,Expenses,249,SoloDry Restoration (Sample),Dec,2025
+Miscellaneous,Expenses,224,SoloDry Restoration (Sample),Jan,2025
+Miscellaneous,Expenses,208,SoloDry Restoration (Sample),Feb,2025
+Miscellaneous,Expenses,120,SoloDry Restoration (Sample),Mar,2025
+Miscellaneous,Expenses,159,SoloDry Restoration (Sample),Apr,2025
+Miscellaneous,Expenses,132,SoloDry Restoration (Sample),May,2025
+Miscellaneous,Expenses,120,SoloDry Restoration (Sample),Jun,2025
+Miscellaneous,Expenses,146,SoloDry Restoration (Sample),Jul,2025
+Miscellaneous,Expenses,120,SoloDry Restoration (Sample),Aug,2025
+Miscellaneous,Expenses,170,SoloDry Restoration (Sample),Sep,2025
+Miscellaneous,Expenses,212,SoloDry Restoration (Sample),Oct,2025
+Miscellaneous,Expenses,173,SoloDry Restoration (Sample),Nov,2025
+Miscellaneous,Expenses,245,SoloDry Restoration (Sample),Dec,2025
+Mitigation Revenue,Income,33699,Hometown Restoration Co. (Sample),Jan,2025
+Mitigation Revenue,Income,36597,Hometown Restoration Co. (Sample),Feb,2025
+Mitigation Revenue,Income,31594,Hometown Restoration Co. (Sample),Mar,2025
+Mitigation Revenue,Income,36371,Hometown Restoration Co. (Sample),Apr,2025
+Mitigation Revenue,Income,30358,Hometown Restoration Co. (Sample),May,2025
+Mitigation Revenue,Income,39449,Hometown Restoration Co. (Sample),Jun,2025
+Mitigation Revenue,Income,37781,Hometown Restoration Co. (Sample),Jul,2025
+Mitigation Revenue,Income,44600,Hometown Restoration Co. (Sample),Aug,2025
+Mitigation Revenue,Income,31717,Hometown Restoration Co. (Sample),Sep,2025
+Mitigation Revenue,Income,43899,Hometown Restoration Co. (Sample),Oct,2025
+Mitigation Revenue,Income,38273,Hometown Restoration Co. (Sample),Nov,2025
+Mitigation Revenue,Income,42317,Hometown Restoration Co. (Sample),Dec,2025
+Reconstruction Revenue,Income,29263,Hometown Restoration Co. (Sample),Jan,2025
+Reconstruction Revenue,Income,33303,Hometown Restoration Co. (Sample),Feb,2025
+Reconstruction Revenue,Income,30582,Hometown Restoration Co. (Sample),Mar,2025
+Reconstruction Revenue,Income,29491,Hometown Restoration Co. (Sample),Apr,2025
+Reconstruction Revenue,Income,27124,Hometown Restoration Co. (Sample),May,2025
+Reconstruction Revenue,Income,35256,Hometown Restoration Co. (Sample),Jun,2025
+Reconstruction Revenue,Income,37857,Hometown Restoration Co. (Sample),Jul,2025
+Reconstruction Revenue,Income,35872,Hometown Restoration Co. (Sample),Aug,2025
+Reconstruction Revenue,Income,28548,Hometown Restoration Co. (Sample),Sep,2025
+Reconstruction Revenue,Income,41867,Hometown Restoration Co. (Sample),Oct,2025
+Reconstruction Revenue,Income,36201,Hometown Restoration Co. (Sample),Nov,2025
+Reconstruction Revenue,Income,36855,Hometown Restoration Co. (Sample),Dec,2025
+Contents / Pack-out Revenue,Income,8391,Hometown Restoration Co. (Sample),Jan,2025
+Contents / Pack-out Revenue,Income,9145,Hometown Restoration Co. (Sample),Feb,2025
+Contents / Pack-out Revenue,Income,7181,Hometown Restoration Co. (Sample),Mar,2025
+Contents / Pack-out Revenue,Income,8094,Hometown Restoration Co. (Sample),Apr,2025
+Contents / Pack-out Revenue,Income,6880,Hometown Restoration Co. (Sample),May,2025
+Contents / Pack-out Revenue,Income,8807,Hometown Restoration Co. (Sample),Jun,2025
+Contents / Pack-out Revenue,Income,8560,Hometown Restoration Co. (Sample),Jul,2025
+Contents / Pack-out Revenue,Income,9838,Hometown Restoration Co. (Sample),Aug,2025
+Contents / Pack-out Revenue,Income,7231,Hometown Restoration Co. (Sample),Sep,2025
+Contents / Pack-out Revenue,Income,8981,Hometown Restoration Co. (Sample),Oct,2025
+Contents / Pack-out Revenue,Income,8383,Hometown Restoration Co. (Sample),Nov,2025
+Contents / Pack-out Revenue,Income,9125,Hometown Restoration Co. (Sample),Dec,2025
+Other Revenue,Income,3904,Hometown Restoration Co. (Sample),Jan,2025
+Other Revenue,Income,4291,Hometown Restoration Co. (Sample),Feb,2025
+Other Revenue,Income,3665,Hometown Restoration Co. (Sample),Mar,2025
+Other Revenue,Income,3798,Hometown Restoration Co. (Sample),Apr,2025
+Other Revenue,Income,3485,Hometown Restoration Co. (Sample),May,2025
+Other Revenue,Income,4439,Hometown Restoration Co. (Sample),Jun,2025
+Other Revenue,Income,4377,Hometown Restoration Co. (Sample),Jul,2025
+Other Revenue,Income,4738,Hometown Restoration Co. (Sample),Aug,2025
+Other Revenue,Income,3712,Hometown Restoration Co. (Sample),Sep,2025
+Other Revenue,Income,4959,Hometown Restoration Co. (Sample),Oct,2025
+Other Revenue,Income,4587,Hometown Restoration Co. (Sample),Nov,2025
+Other Revenue,Income,4556,Hometown Restoration Co. (Sample),Dec,2025
+Direct Labor,Cost of Goods Sold,18735,Hometown Restoration Co. (Sample),Jan,2025
+Direct Labor,Cost of Goods Sold,21953,Hometown Restoration Co. (Sample),Feb,2025
+Direct Labor,Cost of Goods Sold,18207,Hometown Restoration Co. (Sample),Mar,2025
+Direct Labor,Cost of Goods Sold,19644,Hometown Restoration Co. (Sample),Apr,2025
+Direct Labor,Cost of Goods Sold,17172,Hometown Restoration Co. (Sample),May,2025
+Direct Labor,Cost of Goods Sold,23356,Hometown Restoration Co. (Sample),Jun,2025
+Direct Labor,Cost of Goods Sold,23500,Hometown Restoration Co. (Sample),Jul,2025
+Direct Labor,Cost of Goods Sold,25232,Hometown Restoration Co. (Sample),Aug,2025
+Direct Labor,Cost of Goods Sold,18242,Hometown Restoration Co. (Sample),Sep,2025
+Direct Labor,Cost of Goods Sold,26348,Hometown Restoration Co. (Sample),Oct,2025
+Direct Labor,Cost of Goods Sold,22265,Hometown Restoration Co. (Sample),Nov,2025
+Direct Labor,Cost of Goods Sold,23515,Hometown Restoration Co. (Sample),Dec,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,5401,Hometown Restoration Co. (Sample),Jan,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,5829,Hometown Restoration Co. (Sample),Feb,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,4929,Hometown Restoration Co. (Sample),Mar,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,5451,Hometown Restoration Co. (Sample),Apr,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,4375,Hometown Restoration Co. (Sample),May,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,6124,Hometown Restoration Co. (Sample),Jun,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,6485,Hometown Restoration Co. (Sample),Jul,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,6680,Hometown Restoration Co. (Sample),Aug,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,5188,Hometown Restoration Co. (Sample),Sep,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,6956,Hometown Restoration Co. (Sample),Oct,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,5754,Hometown Restoration Co. (Sample),Nov,2025
+"Labor Burden (Taxes, WC, Benefits)",Cost of Goods Sold,6388,Hometown Restoration Co. (Sample),Dec,2025
+Subcontractors,Cost of Goods Sold,7537,Hometown Restoration Co. (Sample),Jan,2025
+Subcontractors,Cost of Goods Sold,8070,Hometown Restoration Co. (Sample),Feb,2025
+Subcontractors,Cost of Goods Sold,7297,Hometown Restoration Co. (Sample),Mar,2025
+Subcontractors,Cost of Goods Sold,7716,Hometown Restoration Co. (Sample),Apr,2025
+Subcontractors,Cost of Goods Sold,6980,Hometown Restoration Co. (Sample),May,2025
+Subcontractors,Cost of Goods Sold,8716,Hometown Restoration Co. (Sample),Jun,2025
+Subcontractors,Cost of Goods Sold,8951,Hometown Restoration Co. (Sample),Jul,2025
+Subcontractors,Cost of Goods Sold,9510,Hometown Restoration Co. (Sample),Aug,2025
+Subcontractors,Cost of Goods Sold,7073,Hometown Restoration Co. (Sample),Sep,2025
+Subcontractors,Cost of Goods Sold,10425,Hometown Restoration Co. (Sample),Oct,2025
+Subcontractors,Cost of Goods Sold,8602,Hometown Restoration Co. (Sample),Nov,2025
+Subcontractors,Cost of Goods Sold,9119,Hometown Restoration Co. (Sample),Dec,2025
+Materials & Supplies,Cost of Goods Sold,8389,Hometown Restoration Co. (Sample),Jan,2025
+Materials & Supplies,Cost of Goods Sold,9447,Hometown Restoration Co. (Sample),Feb,2025
+Materials & Supplies,Cost of Goods Sold,7951,Hometown Restoration Co. (Sample),Mar,2025
+Materials & Supplies,Cost of Goods Sold,8611,Hometown Restoration Co. (Sample),Apr,2025
+Materials & Supplies,Cost of Goods Sold,7816,Hometown Restoration Co. (Sample),May,2025
+Materials & Supplies,Cost of Goods Sold,9558,Hometown Restoration Co. (Sample),Jun,2025
+Materials & Supplies,Cost of Goods Sold,9801,Hometown Restoration Co. (Sample),Jul,2025
+Materials & Supplies,Cost of Goods Sold,11030,Hometown Restoration Co. (Sample),Aug,2025
+Materials & Supplies,Cost of Goods Sold,7755,Hometown Restoration Co. (Sample),Sep,2025
+Materials & Supplies,Cost of Goods Sold,11301,Hometown Restoration Co. (Sample),Oct,2025
+Materials & Supplies,Cost of Goods Sold,9625,Hometown Restoration Co. (Sample),Nov,2025
+Materials & Supplies,Cost of Goods Sold,10308,Hometown Restoration Co. (Sample),Dec,2025
+Equipment Rental,Cost of Goods Sold,1877,Hometown Restoration Co. (Sample),Jan,2025
+Equipment Rental,Cost of Goods Sold,2021,Hometown Restoration Co. (Sample),Feb,2025
+Equipment Rental,Cost of Goods Sold,1821,Hometown Restoration Co. (Sample),Mar,2025
+Equipment Rental,Cost of Goods Sold,1925,Hometown Restoration Co. (Sample),Apr,2025
+Equipment Rental,Cost of Goods Sold,1699,Hometown Restoration Co. (Sample),May,2025
+Equipment Rental,Cost of Goods Sold,2147,Hometown Restoration Co. (Sample),Jun,2025
+Equipment Rental,Cost of Goods Sold,2334,Hometown Restoration Co. (Sample),Jul,2025
+Equipment Rental,Cost of Goods Sold,2396,Hometown Restoration Co. (Sample),Aug,2025
+Equipment Rental,Cost of Goods Sold,1860,Hometown Restoration Co. (Sample),Sep,2025
+Equipment Rental,Cost of Goods Sold,2496,Hometown Restoration Co. (Sample),Oct,2025
+Equipment Rental,Cost of Goods Sold,2220,Hometown Restoration Co. (Sample),Nov,2025
+Equipment Rental,Cost of Goods Sold,2391,Hometown Restoration Co. (Sample),Dec,2025
+Disposal / Dump Fees,Cost of Goods Sold,931,Hometown Restoration Co. (Sample),Jan,2025
+Disposal / Dump Fees,Cost of Goods Sold,1044,Hometown Restoration Co. (Sample),Feb,2025
+Disposal / Dump Fees,Cost of Goods Sold,873,Hometown Restoration Co. (Sample),Mar,2025
+Disposal / Dump Fees,Cost of Goods Sold,1002,Hometown Restoration Co. (Sample),Apr,2025
+Disposal / Dump Fees,Cost of Goods Sold,761,Hometown Restoration Co. (Sample),May,2025
+Disposal / Dump Fees,Cost of Goods Sold,1112,Hometown Restoration Co. (Sample),Jun,2025
+Disposal / Dump Fees,Cost of Goods Sold,1058,Hometown Restoration Co. (Sample),Jul,2025
+Disposal / Dump Fees,Cost of Goods Sold,1173,Hometown Restoration Co. (Sample),Aug,2025
+Disposal / Dump Fees,Cost of Goods Sold,849,Hometown Restoration Co. (Sample),Sep,2025
+Disposal / Dump Fees,Cost of Goods Sold,1188,Hometown Restoration Co. (Sample),Oct,2025
+Disposal / Dump Fees,Cost of Goods Sold,1069,Hometown Restoration Co. (Sample),Nov,2025
+Disposal / Dump Fees,Cost of Goods Sold,1167,Hometown Restoration Co. (Sample),Dec,2025
+Wages - Administrative / Indirect,Expenses,7526,Hometown Restoration Co. (Sample),Jan,2025
+Wages - Administrative / Indirect,Expenses,8334,Hometown Restoration Co. (Sample),Feb,2025
+Wages - Administrative / Indirect,Expenses,7302,Hometown Restoration Co. (Sample),Mar,2025
+Wages - Administrative / Indirect,Expenses,7775,Hometown Restoration Co. (Sample),Apr,2025
+Wages - Administrative / Indirect,Expenses,6785,Hometown Restoration Co. (Sample),May,2025
+Wages - Administrative / Indirect,Expenses,8795,Hometown Restoration Co. (Sample),Jun,2025
+Wages - Administrative / Indirect,Expenses,8857,Hometown Restoration Co. (Sample),Jul,2025
+Wages - Administrative / Indirect,Expenses,9505,Hometown Restoration Co. (Sample),Aug,2025
+Wages - Administrative / Indirect,Expenses,7121,Hometown Restoration Co. (Sample),Sep,2025
+Wages - Administrative / Indirect,Expenses,9971,Hometown Restoration Co. (Sample),Oct,2025
+Wages - Administrative / Indirect,Expenses,8744,Hometown Restoration Co. (Sample),Nov,2025
+Wages - Administrative / Indirect,Expenses,9285,Hometown Restoration Co. (Sample),Dec,2025
+Payroll Taxes - Indirect,Expenses,1054,Hometown Restoration Co. (Sample),Jan,2025
+Payroll Taxes - Indirect,Expenses,1167,Hometown Restoration Co. (Sample),Feb,2025
+Payroll Taxes - Indirect,Expenses,1022,Hometown Restoration Co. (Sample),Mar,2025
+Payroll Taxes - Indirect,Expenses,1088,Hometown Restoration Co. (Sample),Apr,2025
+Payroll Taxes - Indirect,Expenses,950,Hometown Restoration Co. (Sample),May,2025
+Payroll Taxes - Indirect,Expenses,1231,Hometown Restoration Co. (Sample),Jun,2025
+Payroll Taxes - Indirect,Expenses,1240,Hometown Restoration Co. (Sample),Jul,2025
+Payroll Taxes - Indirect,Expenses,1331,Hometown Restoration Co. (Sample),Aug,2025
+Payroll Taxes - Indirect,Expenses,997,Hometown Restoration Co. (Sample),Sep,2025
+Payroll Taxes - Indirect,Expenses,1396,Hometown Restoration Co. (Sample),Oct,2025
+Payroll Taxes - Indirect,Expenses,1224,Hometown Restoration Co. (Sample),Nov,2025
+Payroll Taxes - Indirect,Expenses,1300,Hometown Restoration Co. (Sample),Dec,2025
+Rent / Lease,Expenses,4640,Hometown Restoration Co. (Sample),Jan,2025
+Rent / Lease,Expenses,4510,Hometown Restoration Co. (Sample),Feb,2025
+Rent / Lease,Expenses,4567,Hometown Restoration Co. (Sample),Mar,2025
+Rent / Lease,Expenses,4450,Hometown Restoration Co. (Sample),Apr,2025
+Rent / Lease,Expenses,4602,Hometown Restoration Co. (Sample),May,2025
+Rent / Lease,Expenses,4497,Hometown Restoration Co. (Sample),Jun,2025
+Rent / Lease,Expenses,4529,Hometown Restoration Co. (Sample),Jul,2025
+Rent / Lease,Expenses,4502,Hometown Restoration Co. (Sample),Aug,2025
+Rent / Lease,Expenses,4409,Hometown Restoration Co. (Sample),Sep,2025
+Rent / Lease,Expenses,4647,Hometown Restoration Co. (Sample),Oct,2025
+Rent / Lease,Expenses,4529,Hometown Restoration Co. (Sample),Nov,2025
+Rent / Lease,Expenses,4539,Hometown Restoration Co. (Sample),Dec,2025
+Utilities,Expenses,910,Hometown Restoration Co. (Sample),Jan,2025
+Utilities,Expenses,892,Hometown Restoration Co. (Sample),Feb,2025
+Utilities,Expenses,894,Hometown Restoration Co. (Sample),Mar,2025
+Utilities,Expenses,861,Hometown Restoration Co. (Sample),Apr,2025
+Utilities,Expenses,884,Hometown Restoration Co. (Sample),May,2025
+Utilities,Expenses,825,Hometown Restoration Co. (Sample),Jun,2025
+Utilities,Expenses,926,Hometown Restoration Co. (Sample),Jul,2025
+Utilities,Expenses,859,Hometown Restoration Co. (Sample),Aug,2025
+Utilities,Expenses,849,Hometown Restoration Co. (Sample),Sep,2025
+Utilities,Expenses,901,Hometown Restoration Co. (Sample),Oct,2025
+Utilities,Expenses,918,Hometown Restoration Co. (Sample),Nov,2025
+Utilities,Expenses,951,Hometown Restoration Co. (Sample),Dec,2025
+Insurance - General Liability,Expenses,1959,Hometown Restoration Co. (Sample),Jan,2025
+Insurance - General Liability,Expenses,2055,Hometown Restoration Co. (Sample),Feb,2025
+Insurance - General Liability,Expenses,2020,Hometown Restoration Co. (Sample),Mar,2025
+Insurance - General Liability,Expenses,1986,Hometown Restoration Co. (Sample),Apr,2025
+Insurance - General Liability,Expenses,2005,Hometown Restoration Co. (Sample),May,2025
+Insurance - General Liability,Expenses,1974,Hometown Restoration Co. (Sample),Jun,2025
+Insurance - General Liability,Expenses,1985,Hometown Restoration Co. (Sample),Jul,2025
+Insurance - General Liability,Expenses,2070,Hometown Restoration Co. (Sample),Aug,2025
+Insurance - General Liability,Expenses,1976,Hometown Restoration Co. (Sample),Sep,2025
+Insurance - General Liability,Expenses,2146,Hometown Restoration Co. (Sample),Oct,2025
+Insurance - General Liability,Expenses,2107,Hometown Restoration Co. (Sample),Nov,2025
+Insurance - General Liability,Expenses,2038,Hometown Restoration Co. (Sample),Dec,2025
+Insurance - Auto,Expenses,1156,Hometown Restoration Co. (Sample),Jan,2025
+Insurance - Auto,Expenses,1179,Hometown Restoration Co. (Sample),Feb,2025
+Insurance - Auto,Expenses,1184,Hometown Restoration Co. (Sample),Mar,2025
+Insurance - Auto,Expenses,1206,Hometown Restoration Co. (Sample),Apr,2025
+Insurance - Auto,Expenses,1197,Hometown Restoration Co. (Sample),May,2025
+Insurance - Auto,Expenses,1184,Hometown Restoration Co. (Sample),Jun,2025
+Insurance - Auto,Expenses,1203,Hometown Restoration Co. (Sample),Jul,2025
+Insurance - Auto,Expenses,1228,Hometown Restoration Co. (Sample),Aug,2025
+Insurance - Auto,Expenses,1260,Hometown Restoration Co. (Sample),Sep,2025
+Insurance - Auto,Expenses,1224,Hometown Restoration Co. (Sample),Oct,2025
+Insurance - Auto,Expenses,1227,Hometown Restoration Co. (Sample),Nov,2025
+Insurance - Auto,Expenses,1250,Hometown Restoration Co. (Sample),Dec,2025
+Health / Benefits (Non-COGS),Expenses,3465,Hometown Restoration Co. (Sample),Jan,2025
+Health / Benefits (Non-COGS),Expenses,3535,Hometown Restoration Co. (Sample),Feb,2025
+Health / Benefits (Non-COGS),Expenses,3538,Hometown Restoration Co. (Sample),Mar,2025
+Health / Benefits (Non-COGS),Expenses,3398,Hometown Restoration Co. (Sample),Apr,2025
+Health / Benefits (Non-COGS),Expenses,3519,Hometown Restoration Co. (Sample),May,2025
+Health / Benefits (Non-COGS),Expenses,3533,Hometown Restoration Co. (Sample),Jun,2025
+Health / Benefits (Non-COGS),Expenses,3434,Hometown Restoration Co. (Sample),Jul,2025
+Health / Benefits (Non-COGS),Expenses,3641,Hometown Restoration Co. (Sample),Aug,2025
+Health / Benefits (Non-COGS),Expenses,3465,Hometown Restoration Co. (Sample),Sep,2025
+Health / Benefits (Non-COGS),Expenses,3491,Hometown Restoration Co. (Sample),Oct,2025
+Health / Benefits (Non-COGS),Expenses,3548,Hometown Restoration Co. (Sample),Nov,2025
+Health / Benefits (Non-COGS),Expenses,3432,Hometown Restoration Co. (Sample),Dec,2025
+Vehicle Fuel & Maintenance,Expenses,1590,Hometown Restoration Co. (Sample),Jan,2025
+Vehicle Fuel & Maintenance,Expenses,2030,Hometown Restoration Co. (Sample),Feb,2025
+Vehicle Fuel & Maintenance,Expenses,1435,Hometown Restoration Co. (Sample),Mar,2025
+Vehicle Fuel & Maintenance,Expenses,1773,Hometown Restoration Co. (Sample),Apr,2025
+Vehicle Fuel & Maintenance,Expenses,1517,Hometown Restoration Co. (Sample),May,2025
+Vehicle Fuel & Maintenance,Expenses,2096,Hometown Restoration Co. (Sample),Jun,2025
+Vehicle Fuel & Maintenance,Expenses,2075,Hometown Restoration Co. (Sample),Jul,2025
+Vehicle Fuel & Maintenance,Expenses,2259,Hometown Restoration Co. (Sample),Aug,2025
+Vehicle Fuel & Maintenance,Expenses,1447,Hometown Restoration Co. (Sample),Sep,2025
+Vehicle Fuel & Maintenance,Expenses,2058,Hometown Restoration Co. (Sample),Oct,2025
+Vehicle Fuel & Maintenance,Expenses,1810,Hometown Restoration Co. (Sample),Nov,2025
+Vehicle Fuel & Maintenance,Expenses,2224,Hometown Restoration Co. (Sample),Dec,2025
+Marketing & Advertising,Expenses,2042,Hometown Restoration Co. (Sample),Jan,2025
+Marketing & Advertising,Expenses,2391,Hometown Restoration Co. (Sample),Feb,2025
+Marketing & Advertising,Expenses,1775,Hometown Restoration Co. (Sample),Mar,2025
+Marketing & Advertising,Expenses,2575,Hometown Restoration Co. (Sample),Apr,2025
+Marketing & Advertising,Expenses,1791,Hometown Restoration Co. (Sample),May,2025
+Marketing & Advertising,Expenses,2518,Hometown Restoration Co. (Sample),Jun,2025
+Marketing & Advertising,Expenses,2350,Hometown Restoration Co. (Sample),Jul,2025
+Marketing & Advertising,Expenses,2317,Hometown Restoration Co. (Sample),Aug,2025
+Marketing & Advertising,Expenses,2067,Hometown Restoration Co. (Sample),Sep,2025
+Marketing & Advertising,Expenses,2220,Hometown Restoration Co. (Sample),Oct,2025
+Marketing & Advertising,Expenses,2680,Hometown Restoration Co. (Sample),Nov,2025
+Marketing & Advertising,Expenses,2233,Hometown Restoration Co. (Sample),Dec,2025
+Office Supplies,Expenses,453,Hometown Restoration Co. (Sample),Jan,2025
+Office Supplies,Expenses,536,Hometown Restoration Co. (Sample),Feb,2025
+Office Supplies,Expenses,512,Hometown Restoration Co. (Sample),Mar,2025
+Office Supplies,Expenses,403,Hometown Restoration Co. (Sample),Apr,2025
+Office Supplies,Expenses,505,Hometown Restoration Co. (Sample),May,2025
+Office Supplies,Expenses,492,Hometown Restoration Co. (Sample),Jun,2025
+Office Supplies,Expenses,530,Hometown Restoration Co. (Sample),Jul,2025
+Office Supplies,Expenses,552,Hometown Restoration Co. (Sample),Aug,2025
+Office Supplies,Expenses,595,Hometown Restoration Co. (Sample),Sep,2025
+Office Supplies,Expenses,505,Hometown Restoration Co. (Sample),Oct,2025
+Office Supplies,Expenses,463,Hometown Restoration Co. (Sample),Nov,2025
+Office Supplies,Expenses,442,Hometown Restoration Co. (Sample),Dec,2025
+Software Subscriptions,Expenses,765,Hometown Restoration Co. (Sample),Jan,2025
+Software Subscriptions,Expenses,685,Hometown Restoration Co. (Sample),Feb,2025
+Software Subscriptions,Expenses,680,Hometown Restoration Co. (Sample),Mar,2025
+Software Subscriptions,Expenses,731,Hometown Restoration Co. (Sample),Apr,2025
+Software Subscriptions,Expenses,699,Hometown Restoration Co. (Sample),May,2025
+Software Subscriptions,Expenses,738,Hometown Restoration Co. (Sample),Jun,2025
+Software Subscriptions,Expenses,701,Hometown Restoration Co. (Sample),Jul,2025
+Software Subscriptions,Expenses,687,Hometown Restoration Co. (Sample),Aug,2025
+Software Subscriptions,Expenses,685,Hometown Restoration Co. (Sample),Sep,2025
+Software Subscriptions,Expenses,739,Hometown Restoration Co. (Sample),Oct,2025
+Software Subscriptions,Expenses,715,Hometown Restoration Co. (Sample),Nov,2025
+Software Subscriptions,Expenses,714,Hometown Restoration Co. (Sample),Dec,2025
+Professional Fees,Expenses,932,Hometown Restoration Co. (Sample),Jan,2025
+Professional Fees,Expenses,858,Hometown Restoration Co. (Sample),Feb,2025
+Professional Fees,Expenses,958,Hometown Restoration Co. (Sample),Mar,2025
+Professional Fees,Expenses,1022,Hometown Restoration Co. (Sample),Apr,2025
+Professional Fees,Expenses,805,Hometown Restoration Co. (Sample),May,2025
+Professional Fees,Expenses,955,Hometown Restoration Co. (Sample),Jun,2025
+Professional Fees,Expenses,752,Hometown Restoration Co. (Sample),Jul,2025
+Professional Fees,Expenses,886,Hometown Restoration Co. (Sample),Aug,2025
+Professional Fees,Expenses,906,Hometown Restoration Co. (Sample),Sep,2025
+Professional Fees,Expenses,927,Hometown Restoration Co. (Sample),Oct,2025
+Professional Fees,Expenses,1035,Hometown Restoration Co. (Sample),Nov,2025
+Professional Fees,Expenses,938,Hometown Restoration Co. (Sample),Dec,2025
+Repairs & Maintenance,Expenses,472,Hometown Restoration Co. (Sample),Jan,2025
+Repairs & Maintenance,Expenses,504,Hometown Restoration Co. (Sample),Feb,2025
+Repairs & Maintenance,Expenses,492,Hometown Restoration Co. (Sample),Mar,2025
+Repairs & Maintenance,Expenses,465,Hometown Restoration Co. (Sample),Apr,2025
+Repairs & Maintenance,Expenses,494,Hometown Restoration Co. (Sample),May,2025
+Repairs & Maintenance,Expenses,511,Hometown Restoration Co. (Sample),Jun,2025
+Repairs & Maintenance,Expenses,507,Hometown Restoration Co. (Sample),Jul,2025
+Repairs & Maintenance,Expenses,530,Hometown Restoration Co. (Sample),Aug,2025
+Repairs & Maintenance,Expenses,553,Hometown Restoration Co. (Sample),Sep,2025
+Repairs & Maintenance,Expenses,402,Hometown Restoration Co. (Sample),Oct,2025
+Repairs & Maintenance,Expenses,439,Hometown Restoration Co. (Sample),Nov,2025
+Repairs & Maintenance,Expenses,419,Hometown Restoration Co. (Sample),Dec,2025
+Depreciation,Expenses,1775,Hometown Restoration Co. (Sample),Jan,2025
+Depreciation,Expenses,1861,Hometown Restoration Co. (Sample),Feb,2025
+Depreciation,Expenses,1829,Hometown Restoration Co. (Sample),Mar,2025
+Depreciation,Expenses,1789,Hometown Restoration Co. (Sample),Apr,2025
+Depreciation,Expenses,1811,Hometown Restoration Co. (Sample),May,2025
+Depreciation,Expenses,1817,Hometown Restoration Co. (Sample),Jun,2025
+Depreciation,Expenses,1782,Hometown Restoration Co. (Sample),Jul,2025
+Depreciation,Expenses,1831,Hometown Restoration Co. (Sample),Aug,2025
+Depreciation,Expenses,1811,Hometown Restoration Co. (Sample),Sep,2025
+Depreciation,Expenses,1827,Hometown Restoration Co. (Sample),Oct,2025
+Depreciation,Expenses,1810,Hometown Restoration Co. (Sample),Nov,2025
+Depreciation,Expenses,1795,Hometown Restoration Co. (Sample),Dec,2025
+Miscellaneous,Expenses,771,Hometown Restoration Co. (Sample),Jan,2025
+Miscellaneous,Expenses,1252,Hometown Restoration Co. (Sample),Feb,2025
+Miscellaneous,Expenses,1118,Hometown Restoration Co. (Sample),Mar,2025
+Miscellaneous,Expenses,1092,Hometown Restoration Co. (Sample),Apr,2025
+Miscellaneous,Expenses,494,Hometown Restoration Co. (Sample),May,2025
+Miscellaneous,Expenses,1114,Hometown Restoration Co. (Sample),Jun,2025
+Miscellaneous,Expenses,992,Hometown Restoration Co. (Sample),Jul,2025
+Miscellaneous,Expenses,1185,Hometown Restoration Co. (Sample),Aug,2025
+Miscellaneous,Expenses,867,Hometown Restoration Co. (Sample),Sep,2025
+Miscellaneous,Expenses,1586,Hometown Restoration Co. (Sample),Oct,2025
+Miscellaneous,Expenses,831,Hometown Restoration Co. (Sample),Nov,2025
+Miscellaneous,Expenses,1229,Hometown Restoration Co. (Sample),Dec,2025
