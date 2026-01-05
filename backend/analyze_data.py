@@ -293,6 +293,50 @@ def generate_html(data, output_path):
             border-radius: 6px;
             cursor: pointer;
         }}
+
+        /* FAQ Styles */
+        .faq-section {{
+            margin-top: 40px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 40px;
+        }}
+        .faq-item {{
+            border-bottom: 1px solid #e2e8f0;
+            padding: 15px 0;
+        }}
+        .faq-item:last-child {{
+            border-bottom: none;
+        }}
+        .faq-question {{
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-main);
+        }}
+        .faq-answer {{
+            margin-top: 10px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: none;
+        }}
+        .faq-item.active .faq-answer {{
+            display: block;
+        }}
+        .faq-icon::after {{
+            content: '+';
+            font-size: 1.2rem;
+            font-weight: bold;
+        }}
+        .faq-item.active .faq-icon::after {{
+            content: '−';
+        }}
     </style>
 </head>
 <body>
@@ -403,6 +447,60 @@ def generate_html(data, output_path):
                     <!-- Populated by JS -->
                 </tbody>
             </table>
+        </div>
+
+        <div class="faq-section">
+            <h3>Business & Financial FAQ</h3>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    What are the industrial standards for Profit Margins in restoration?
+                    <span class="faq-icon"></span>
+                </div>
+                <div class="faq-answer">
+                    In the restoration industry, a healthy Net Profit Margin typically ranges between 15% to 25%. Mitigation services (water/mold) often command higher margins (up to 40%+) due to specialized equipment and labor, while reconstruction services typically have lower margins (10% - 15%) due to subcontracting costs.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    What does 'COGS' include in this report?
+                    <span class="faq-icon"></span>
+                </div>
+                <div class="faq-answer">
+                    Cost of Goods Sold (COGS) includes direct costs directly tied to revenue generation. In restoration, this primarily consists of field labor (technician wages), materials (antimicrobials, drywall, flooring), and equipment rentals or direct fuel costs for service vehicles.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    What is the difference between Expenses and COGS?
+                    <span class="faq-icon"></span>
+                </div>
+                <div class="faq-answer">
+                    COGS are "Direct Costs" that vary with the volume of work. Expenses (or Operating Expenses/OpEx) are "Indirect Costs" or overhead needed to keep the business running regardless of volume, such as office rent, insurance, marketing, and administrative salaries.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    What does a negative Net Profit mean for a specific month?
+                    <span class="faq-icon"></span>
+                </div>
+                <div class="faq-answer">
+                    A negative Net Profit (a loss) means your total costs (COGS + Expenses) exceeded your Revenue for that period. This can happen during slow seasons, months with high equipment investment, or if job costs were not properly managed.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    How is the 'Net Margin %' calculated?
+                    <span class="faq-icon"></span>
+                </div>
+                <div class="faq-answer">
+                    It is calculated as: (Net Profit / Total Revenue) * 100. It represents how many cents of every dollar earned actually becomes profit after all expenses are paid.
+                </div>
+            </div>
         </div>
     </div>
 
