@@ -1,10 +1,35 @@
-.DS_Store
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
-env/
+*.py[cod]
+*$py.class
+
+# Virtual environment
 venv/
-ENV/
+env/
+.venv/
+
+# Environment variables
 .env
+*.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/

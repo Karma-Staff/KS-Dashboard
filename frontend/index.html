@@ -1,286 +1,809 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Performance Dashboard</title>
+    <title>Restor Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ============= Design System - Light Theme (Default) ============= */
         :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --primary: #2563eb;
-            --success: #10b981;
-            --danger: #ef4444;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            /* Backgrounds */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --bg-tertiary: #e8e8ed;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f5f5f7;
+
+            /* Text */
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-tertiary: #86868b;
+
+            /* Accents */
+            --accent-primary: #0071e3;
+            --accent-primary-hover: #0077ed;
+            --accent-success: #34c759;
+            --accent-danger: #ff3b30;
+            --accent-warning: #ff9500;
+
+            /* Borders & Shadows */
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+            /* Chart Colors */
+            --chart-grid: rgba(0, 0, 0, 0.06);
+            --chart-text: #6e6e73;
+            --chart-profit-bg: rgba(52, 199, 89, 0.2);
+            --chart-profit-border: #34c759;
+            --chart-loss-bg: rgba(255, 59, 48, 0.2);
+            --chart-loss-border: #ff3b30;
         }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+
+        /* ============= Dark Theme ============= */
+        [data-theme="dark"] {
+            /* Backgrounds */
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --bg-card: #1c1c1e;
+            --bg-card-hover: #2c2c2e;
+
+            /* Text */
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --text-tertiary: #6e6e73;
+
+            /* Accents */
+            --accent-primary: #0a84ff;
+            --accent-primary-hover: #409cff;
+            --accent-success: #30d158;
+            --accent-danger: #ff453a;
+            --accent-warning: #ff9f0a;
+
+            /* Borders & Shadows */
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+            /* Chart Colors */
+            --chart-grid: rgba(255, 255, 255, 0.08);
+            --chart-text: #a1a1a6;
+            --chart-profit-bg: rgba(48, 209, 88, 0.25);
+            --chart-profit-border: #30d158;
+            --chart-loss-bg: rgba(255, 69, 58, 0.25);
+            --chart-loss-border: #ff453a;
+        }
+
+        /* ============= Base Styles ============= */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 32px 24px;
         }
-        header {
-            margin-bottom: 30px;
+
+        /* ============= Header ============= */
+        .top-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
-        .filter-section {
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9375rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .back-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .logo {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        select {
-            padding: 8px 16px;
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-primary), #5856d6);
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            font-size: 1rem;
-            cursor: pointer;
-            background: white;
-            outline: none;
-        }
-        h1 {
-            font-size: 1.75rem;
-            margin: 0;
-            color: var(--text-main);
-        }
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .stat-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            border: 1px solid #e2e8f0;
-        }
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .chart-container, .table-container {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            border: 1px solid #e2e8f0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-            background-color: #f1f5f9;
-            font-weight: 600;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        .profit-positive { color: var(--success); }
-        .profit-negative { color: var(--danger); }
-        
-        @media (max-width: 900px) {
-            .charts-grid { grid-template-columns: 1fr; }
-            header { flex-direction: column; gap: 20px; text-align: center; }
-            .filter-section { flex-direction: column; width: 100%; }
-            select { width: 100%; }
-        }
-        /* Chatbot Styles */
-        #chat-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            z-index: 1000;
-            transition: transform 0.2s;
         }
-        #chat-toggle:hover { transform: scale(1.05); }
-        
+
+        .logo-icon svg {
+            width: 18px;
+            height: 18px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .byline {
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .dashboard-name {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        .theme-toggle .moon-icon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        /* ============= Page Header ============= */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .page-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 12px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-group label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        select {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            outline: none;
+            min-width: 160px;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--accent-primary);
+        }
+
+        /* ============= Stat Cards ============= */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-label {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .profit-positive {
+            color: var(--accent-success);
+        }
+
+        .profit-negative {
+            color: var(--accent-danger);
+        }
+
+        /* ============= Charts Grid ============= */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .chart-container,
+        .table-container {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-container h3,
+        .table-container h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        /* ============= Tables ============= */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        td {
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ============= Insights Cards ============= */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .insight-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .insight-item {
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+        }
+
+        .insight-item .label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .insight-item .value {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* ============= FAQ Section ============= */
+        .faq-section {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-top: 40px;
+            margin-bottom: 32px;
+        }
+
+        .faq-section>h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .faq-question {
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+        }
+
+        .faq-answer {
+            margin-top: 12px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-icon::after {
+            content: '+';
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+        }
+
+        .faq-item.active .faq-icon::after {
+            content: '−';
+        }
+
+        /* ============= Loading Overlay ============= */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============= Restor AI Chatbot ============= */
+        #chat-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), #5856d6);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #chat-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        #chat-toggle svg {
+            width: 26px;
+            height: 26px;
+        }
+
         #chat-container {
             position: fixed;
-            bottom: 90px;
-            right: 20px;
-            width: 350px;
-            height: 500px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            bottom: 92px;
+            right: 24px;
+            width: 380px;
+            height: 520px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
             display: none;
             flex-direction: column;
             z-index: 1000;
             overflow: hidden;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
+
         .chat-header {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--accent-primary), #5856d6);
             color: white;
-            padding: 15px;
-            font-weight: 600;
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .chat-title-text {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .chat-title-sub {
+            font-size: 0.75rem;
+            opacity: 0.85;
+        }
+
+        .chat-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .chat-header-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            opacity: 0.85;
+        }
+
+        .chat-close:hover {
+            opacity: 1;
+        }
+
+        .chat-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
         #chat-messages {
             flex: 1;
-            padding: 15px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-        }
-        .message {
-            max-width: 80%;
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-        .message.user {
-            align-self: flex-end;
-            background: var(--primary);
-            color: white;
-        }
-        .message.bot {
-            align-self: flex-start;
-            background: #f1f5f9;
-            color: var(--text-main);
-        }
-        .chat-input-area {
-            padding: 15px;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            gap: 10px;
-        }
-        #chat-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            outline: none;
-        }
-        #chat-send {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
+            gap: 12px;
+            background: var(--bg-secondary);
         }
 
-        /* FAQ Styles */
-        .faq-section {
-            margin-top: 40px;
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            border: 1px solid #e2e8f0;
-            margin-bottom: 40px;
-        }
-        .faq-item {
-            border-bottom: 1px solid #e2e8f0;
-            padding: 15px 0;
-        }
-        .faq-item:last-child {
-            border-bottom: none;
-        }
-        .faq-question {
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-main);
-        }
-        .faq-answer {
-            margin-top: 10px;
-            color: var(--text-muted);
-            font-size: 0.95rem;
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 0.875rem;
             line-height: 1.5;
-            display: none;
         }
-        .faq-item.active .faq-answer {
-            display: block;
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--accent-primary), #5856d6);
+            color: white;
+            border-bottom-right-radius: 4px;
         }
-        .faq-icon::after {
-            content: '+';
-            font-size: 1.2rem;
-            font-weight: bold;
+
+        .message.bot {
+            align-self: flex-start;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
         }
-        .faq-item.active .faq-icon::after {
-            content: '−';
+
+        .chat-input-area {
+            padding: 16px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        #chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            font-size: 0.875rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: border-color 0.2s;
+        }
+
+        #chat-input:focus {
+            border-color: var(--accent-primary);
+        }
+
+        #chat-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        #chat-send {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+
+        #chat-send:hover {
+            background: var(--accent-primary-hover);
+        }
+
+        /* ============= Responsive ============= */
+        @media (max-width: 1024px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            select {
+                width: 100%;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #chat-container {
+                width: calc(100% - 32px);
+                right: 16px;
+                height: 70vh;
+            }
         }
     </style>
 </head>
+
 <body>
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
     <div class="container">
-        <header>
-            <div>
-                <h1>Financial Dashboard</h1>
-                <p style="color: var(--text-muted); margin: 5px 0 0 0;">Performance Overview & Analysis</p>
+        <nav class="top-nav">
+            <div class="nav-left">
+                <a href="/" class="back-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back
+                </a>
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="logo-text">Restor<span>Dashboard</span></div>
+                        <div class="byline">by Karma Staff</div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <span class="dashboard-name" id="dashboard-name"></span>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Financial Overview</h1>
+                <p>Performance analysis and insights</p>
             </div>
             <div class="filter-section">
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <label style="font-size: 0.75rem; color: var(--text-muted);">Branch</label>
+                <div class="filter-group">
+                    <label>Branch</label>
                     <select id="companyFilter" onchange="updateDashboard()">
-                        <option value="Overall">Overall Organization</option>
-                        <option value="Hometown Restoration Co. (Sample)">Hometown Restoration Co. (Sample)</option><option value="SoloDry Restoration (Sample)">SoloDry Restoration (Sample)</option>
+                        <option value="Overall">All Branches</option>
                     </select>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <label style="font-size: 0.75rem; color: var(--text-muted);">Start Period</label>
-                    <select id="startPeriod" onchange="updateDashboard()">
-                        <option value="Jan 2025">Jan 2025</option><option value="Feb 2025">Feb 2025</option><option value="Mar 2025">Mar 2025</option><option value="Apr 2025">Apr 2025</option><option value="May 2025">May 2025</option><option value="Jun 2025">Jun 2025</option><option value="Jul 2025">Jul 2025</option><option value="Aug 2025">Aug 2025</option><option value="Sep 2025">Sep 2025</option><option value="Oct 2025">Oct 2025</option><option value="Nov 2025">Nov 2025</option><option value="Dec 2025">Dec 2025</option>
-                    </select>
+                <div class="filter-group">
+                    <label>From</label>
+                    <select id="startPeriod" onchange="updateDashboard()"></select>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <label style="font-size: 0.75rem; color: var(--text-muted);">End Period</label>
-                    <select id="endPeriod" onchange="updateDashboard()">
-                        <option value="Jan 2025" >Jan 2025</option><option value="Feb 2025" >Feb 2025</option><option value="Mar 2025" >Mar 2025</option><option value="Apr 2025" >Apr 2025</option><option value="May 2025" >May 2025</option><option value="Jun 2025" >Jun 2025</option><option value="Jul 2025" >Jul 2025</option><option value="Aug 2025" >Aug 2025</option><option value="Sep 2025" >Sep 2025</option><option value="Oct 2025" >Oct 2025</option><option value="Nov 2025" >Nov 2025</option><option value="Dec 2025" selected>Dec 2025</option>
-                    </select>
+                <div class="filter-group">
+                    <label>To</label>
+                    <select id="endPeriod" onchange="updateDashboard()"></select>
                 </div>
             </div>
-        </header>
+        </div>
 
         <div class="summary-grid">
             <div class="stat-card">
@@ -288,11 +811,11 @@
                 <div class="stat-value" id="cardRevenue">$0.00</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">COGS</div>
+                <div class="stat-label">Cost of Goods Sold</div>
                 <div class="stat-value" id="cardCOGS">$0.00</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Expenses</div>
+                <div class="stat-label">Operating Expenses</div>
                 <div class="stat-value" id="cardExpenses">$0.00</div>
             </div>
             <div class="stat-card">
@@ -303,14 +826,14 @@
 
         <div class="charts-grid">
             <div class="chart-container">
-                <h3 id="chartTitle">Expense Distribution</h3>
-                <div style="height: 300px; display: flex; justify-content: center;">
+                <h3>Expense Distribution</h3>
+                <div style="height: 280px; display: flex; justify-content: center;">
                     <canvas id="expenseChart"></canvas>
                 </div>
             </div>
             <div class="table-container">
-                <h3>Expense Breakdown (Tabular)</h3>
-                <div style="max-height: 300px; overflow-y: auto;">
+                <h3>Expense Breakdown</h3>
+                <div style="max-height: 280px; overflow-y: auto;">
                     <table id="expenseTable">
                         <thead>
                             <tr>
@@ -318,29 +841,27 @@
                                 <th>Amount</th>
                             </tr>
                         </thead>
-                        <tbody id="expenseTableBody">
-                            <!-- Populated by JS -->
-                        </tbody>
+                        <tbody id="expenseTableBody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <div class="charts-grid" style="margin-top: 20px;">
+        <div class="insights-grid">
             <div class="chart-container">
                 <h3>Monthly Profit Trend</h3>
-                <div style="height: 300px;">
+                <div style="height: 260px;">
                     <canvas id="monthlyChart"></canvas>
                 </div>
             </div>
-            <div class="stat-card" style="display: flex; flex-direction: column; justify-content: center; gap: 20px;">
-                <div>
-                    <div class="stat-label">Best Performing Month</div>
-                    <div class="stat-value profit-positive" id="bestMonthText">-</div>
+            <div class="stat-card insight-box">
+                <div class="insight-item">
+                    <div class="label">Best Performing Month</div>
+                    <div class="value profit-positive" id="bestMonthText">-</div>
                 </div>
-                <div>
-                    <div class="stat-label">Least Profitable Month</div>
-                    <div class="stat-value profit-negative" id="worstMonthText">-</div>
+                <div class="insight-item">
+                    <div class="label">Lowest Performance</div>
+                    <div class="value profit-negative" id="worstMonthText">-</div>
                 </div>
             </div>
         </div>
@@ -353,90 +874,205 @@
                         <th>Branch</th>
                         <th>Revenue</th>
                         <th>Net Profit</th>
-                        <th>Margin (%)</th>
+                        <th>Margin</th>
                     </tr>
                 </thead>
-                <tbody id="branchComparisonBody">
-                    <!-- Populated by JS -->
-                </tbody>
+                <tbody id="branchComparisonBody"></tbody>
             </table>
         </div>
 
         <div class="faq-section">
-            <h3>Business & Financial FAQ</h3>
-            
+            <h3>Business FAQ</h3>
+
             <div class="faq-item">
                 <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-                    What are the industrial standards for Profit Margins in restoration?
+                    What are healthy profit margins in restoration?
                     <span class="faq-icon"></span>
                 </div>
                 <div class="faq-answer">
-                    In the restoration industry, a healthy Net Profit Margin typically ranges between 15% to 25%. Mitigation services (water/mold) often command higher margins (up to 40%+) due to specialized equipment and labor, while reconstruction services typically have lower margins (10% - 15%) due to subcontracting costs.
+                    In the restoration industry, a healthy Net Profit Margin typically ranges between 15% to 25%.
+                    Mitigation services often command higher margins (up to 40%+) due to specialized equipment, while
+                    reconstruction typically has lower margins (10-15%) due to subcontracting costs.
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-                    What does 'COGS' include in this report?
+                    What's included in COGS?
                     <span class="faq-icon"></span>
                 </div>
                 <div class="faq-answer">
-                    Cost of Goods Sold (COGS) includes direct costs directly tied to revenue generation. In restoration, this primarily consists of field labor (technician wages), materials (antimicrobials, drywall, flooring), and equipment rentals or direct fuel costs for service vehicles.
+                    Cost of Goods Sold includes direct costs tied to revenue: field labor (technician wages), materials
+                    (antimicrobials, drywall, flooring), and equipment rentals or direct fuel costs for service
+                    vehicles.
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-                    What is the difference between Expenses and COGS?
+                    COGS vs Operating Expenses?
                     <span class="faq-icon"></span>
                 </div>
                 <div class="faq-answer">
-                    COGS are "Direct Costs" that vary with the volume of work. Expenses (or Operating Expenses/OpEx) are "Indirect Costs" or overhead needed to keep the business running regardless of volume, such as office rent, insurance, marketing, and administrative salaries.
+                    COGS are direct costs that vary with work volume. Operating Expenses are indirect costs/overhead
+                    needed regardless of volume: office rent, insurance, marketing, and administrative salaries.
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-                    What does a negative Net Profit mean for a specific month?
+                    How is Net Margin calculated?
                     <span class="faq-icon"></span>
                 </div>
                 <div class="faq-answer">
-                    A negative Net Profit (a loss) means your total costs (COGS + Expenses) exceeded your Revenue for that period. This can happen during slow seasons, months with high equipment investment, or if job costs were not properly managed.
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-                    How is the 'Net Margin %' calculated?
-                    <span class="faq-icon"></span>
-                </div>
-                <div class="faq-answer">
-                    It is calculated as: (Net Profit / Total Revenue) * 100. It represents how many cents of every dollar earned actually becomes profit after all expenses are paid.
+                    Net Margin = (Net Profit / Total Revenue) × 100. It represents how many cents of every dollar earned
+                    becomes profit after all expenses.
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Chatbot UI -->
-    <button id="chat-toggle" onclick="toggleChat()">💬</button>
+    <!-- Restor AI Chatbot -->
+    <button id="chat-toggle" onclick="toggleChat()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+    </button>
+
     <div id="chat-container">
         <div class="chat-header">
-            <span>AI Data Assistant</span>
-            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
+            <div class="chat-title">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <div>
+                    <div class="chat-title-text">Restor AI</div>
+                    <div class="chat-title-sub">Restoration Business Analyst</div>
+                </div>
+            </div>
+            <div class="chat-header-actions">
+                <button class="chat-header-btn" onclick="clearChat()">Clear</button>
+                <button class="chat-close" onclick="toggleChat()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
         </div>
         <div id="chat-messages">
-            <div class="message bot">Hello! I'm your AI assistant. Ask me anything about the financial data.</div>
+            <div class="message bot">Hello! I'm Restor AI, your restoration business analyst. Ask me anything about your
+                financial data.</div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <input type="text" id="chat-input" placeholder="Ask Restor AI..."
+                onkeypress="if(event.key === 'Enter') sendMessage()">
             <button id="chat-send" onclick="sendMessage()">Send</button>
         </div>
     </div>
 
     <script>
-        const dashboardData = {"branches": ["Hometown Restoration Co. (Sample)", "SoloDry Restoration (Sample)"], "periods": ["Jan 2025", "Feb 2025", "Mar 2025", "Apr 2025", "May 2025", "Jun 2025", "Jul 2025", "Aug 2025", "Sep 2025", "Oct 2025", "Nov 2025", "Dec 2025"], "overall": {"revenue": 1200000.0, "cogs": 690480.0, "expenses": 438911.0, "profit": 70609.0, "margin": 5.88, "expense_breakdown": {"Depreciation": 24735, "Health / Benefits (Non-COGS)": 44945, "Insurance - Auto": 17509, "Insurance - General Liability": 29696, "Marketing & Advertising": 30947, "Miscellaneous": 14560, "Office Supplies": 7471, "Payroll Taxes - Indirect": 16801, "Professional Fees": 14084, "Rent / Lease": 61753, "Repairs & Maintenance": 7219, "Software Subscriptions": 10005, "Utilities": 12797, "Vehicle Fuel & Maintenance": 26388, "Wages - Administrative / Indirect": 120001}, "monthly_details": [{"label": "Jan 2025", "revenue": 93736.0, "cogs": 53206.0, "expenses": 35370.0, "profit": 5160.0, "margin": 5.5, "expense_breakdown": {"Depreciation": 2026, "Health / Benefits (Non-COGS)": 3715, "Insurance - Auto": 1412, "Insurance - General Liability": 2403, "Marketing & Advertising": 2474, "Miscellaneous": 995, "Office Supplies": 581, "Payroll Taxes - Indirect": 1313, "Professional Fees": 1227, "Rent / Lease": 5242, "Repairs & Maintenance": 594, "Software Subscriptions": 901, "Utilities": 1106, "Vehicle Fuel & Maintenance": 2007, "Wages - Administrative / Indirect": 9374}}, {"label": "Feb 2025", "revenue": 102747.0, "cogs": 59557.0, "expenses": 37557.0, "profit": 5633.0, "margin": 5.48, "expense_breakdown": {"Depreciation": 2110, "Health / Benefits (Non-COGS)": 3763, "Insurance - Auto": 1431, "Insurance - General Liability": 2488, "Marketing & Advertising": 2772, "Miscellaneous": 1460, "Office Supplies": 657, "Payroll Taxes - Indirect": 1439, "Professional Fees": 1084, "Rent / Lease": 5111, "Repairs & Maintenance": 628, "Software Subscriptions": 805, "Utilities": 1087, "Vehicle Fuel & Maintenance": 2447, "Wages - Administrative / Indirect": 10275}}, {"label": "Mar 2025", "revenue": 85878.0, "cogs": 48159.0, "expenses": 33982.0, "profit": 3737.0, "margin": 4.35, "expense_breakdown": {"Depreciation": 2076, "Health / Benefits (Non-COGS)": 3785, "Insurance - Auto": 1430, "Insurance - General Liability": 2465, "Marketing & Advertising": 2001, "Miscellaneous": 1238, "Office Supplies": 626, "Payroll Taxes - Indirect": 1202, "Professional Fees": 1218, "Rent / Lease": 5178, "Repairs & Maintenance": 625, "Software Subscriptions": 793, "Utilities": 1066, "Vehicle Fuel & Maintenance": 1691, "Wages - Administrative / Indirect": 8588}}, {"label": "Apr 2025", "revenue": 93061.0, "cogs": 52923.0, "expenses": 35847.0, "profit": 4291.0, "margin": 4.61, "expense_breakdown": {"Depreciation": 2038, "Health / Benefits (Non-COGS)": 3641, "Insurance - Auto": 1466, "Insurance - General Liability": 2436, "Marketing & Advertising": 2912, "Miscellaneous": 1251, "Office Supplies": 535, "Payroll Taxes - Indirect": 1302, "Professional Fees": 1332, "Rent / Lease": 5056, "Repairs & Maintenance": 586, "Software Subscriptions": 859, "Utilities": 1051, "Vehicle Fuel & Maintenance": 2076, "Wages - Administrative / Indirect": 9306}}, {"label": "May 2025", "revenue": 81333.0, "cogs": 46230.0, "expenses": 32877.0, "profit": 2226.0, "margin": 2.74, "expense_breakdown": {"Depreciation": 2063, "Health / Benefits (Non-COGS)": 3766, "Insurance - Auto": 1448, "Insurance - General Liability": 2444, "Marketing & Advertising": 2033, "Miscellaneous": 626, "Office Supplies": 626, "Payroll Taxes - Indirect": 1139, "Professional Fees": 1049, "Rent / Lease": 5253, "Repairs & Maintenance": 596, "Software Subscriptions": 829, "Utilities": 1064, "Vehicle Fuel & Maintenance": 1807, "Wages - Administrative / Indirect": 8134}}, {"label": "Jun 2025", "revenue": 101404.0, "cogs": 58474.0, "expenses": 37122.0, "profit": 5808.0, "margin": 5.73, "expense_breakdown": {"Depreciation": 2070, "Health / Benefits (Non-COGS)": 3786, "Insurance - Auto": 1433, "Insurance - General Liability": 2410, "Marketing & Advertising": 2831, "Miscellaneous": 1234, "Office Supplies": 605, "Payroll Taxes - Indirect": 1419, "Professional Fees": 1229, "Rent / Lease": 5115, "Repairs & Maintenance": 602, "Software Subscriptions": 849, "Utilities": 1002, "Vehicle Fuel & Maintenance": 2397, "Wages - Administrative / Indirect": 10140}}, {"label": "Jul 2025", "revenue": 101770.0, "cogs": 59761.0, "expenses": 36679.0, "profit": 5330.0, "margin": 5.24, "expense_breakdown": {"Depreciation": 2033, "Health / Benefits (Non-COGS)": 3685, "Insurance - Auto": 1454, "Insurance - General Liability": 2448, "Marketing & Advertising": 2596, "Miscellaneous": 1138, "Office Supplies": 664, "Payroll Taxes - Indirect": 1425, "Professional Fees": 1015, "Rent / Lease": 5132, "Repairs & Maintenance": 660, "Software Subscriptions": 829, "Utilities": 1094, "Vehicle Fuel & Maintenance": 2329, "Wages - Administrative / Indirect": 10177}}, {"label": "Aug 2025", "revenue": 109937.0, "cogs": 64814.0, "expenses": 38345.0, "profit": 6778.0, "margin": 6.17, "expense_breakdown": {"Depreciation": 2082, "Health / Benefits (Non-COGS)": 3901, "Insurance - Auto": 1471, "Insurance - General Liability": 2541, "Marketing & Advertising": 2575, "Miscellaneous": 1305, "Office Supplies": 670, "Payroll Taxes - Indirect": 1539, "Professional Fees": 1148, "Rent / Lease": 5096, "Repairs & Maintenance": 645, "Software Subscriptions": 808, "Utilities": 1028, "Vehicle Fuel & Maintenance": 2542, "Wages - Administrative / Indirect": 10994}}, {"label": "Sep 2025", "revenue": 88551.0, "cogs": 50930.0, "expenses": 34407.0, "profit": 3214.0, "margin": 3.63, "expense_breakdown": {"Depreciation": 2062, "Health / Benefits (Non-COGS)": 3703, "Insurance - Auto": 1517, "Insurance - General Liability": 2428, "Marketing & Advertising": 2388, "Miscellaneous": 1037, "Office Supplies": 710, "Payroll Taxes - Indirect": 1240, "Professional Fees": 1163, "Rent / Lease": 5019, "Repairs & Maintenance": 689, "Software Subscriptions": 796, "Utilities": 1015, "Vehicle Fuel & Maintenance": 1785, "Wages - Administrative / Indirect": 8855}}, {"label": "Oct 2025", "revenue": 116837.0, "cogs": 68461.0, "expenses": 39562.0, "profit": 8814.0, "margin": 7.54, "expense_breakdown": {"Depreciation": 2074, "Health / Benefits (Non-COGS)": 3745, "Insurance - Auto": 1478, "Insurance - General Liability": 2591, "Marketing & Advertising": 2588, "Miscellaneous": 1798, "Office Supplies": 627, "Payroll Taxes - Indirect": 1636, "Professional Fees": 1194, "Rent / Lease": 5275, "Repairs & Maintenance": 530, "Software Subscriptions": 849, "Utilities": 1066, "Vehicle Fuel & Maintenance": 2427, "Wages - Administrative / Indirect": 11684}}, {"label": "Nov 2025", "revenue": 108061.0, "cogs": 61589.0, "expenses": 38012.0, "profit": 8460.0, "margin": 7.83, "expense_breakdown": {"Depreciation": 2057, "Health / Benefits (Non-COGS)": 3792, "Insurance - Auto": 1482, "Insurance - General Liability": 2558, "Marketing & Advertising": 3121, "Miscellaneous": 1004, "Office Supplies": 588, "Payroll Taxes - Indirect": 1513, "Professional Fees": 1253, "Rent / Lease": 5148, "Repairs & Maintenance": 551, "Software Subscriptions": 834, "Utilities": 1083, "Vehicle Fuel & Maintenance": 2222, "Wages - Administrative / Indirect": 10806}}, {"label": "Dec 2025", "revenue": 116685.0, "cogs": 66376.0, "expenses": 39151.0, "profit": 11158.0, "margin": 9.56, "expense_breakdown": {"Depreciation": 2044, "Health / Benefits (Non-COGS)": 3663, "Insurance - Auto": 1487, "Insurance - General Liability": 2484, "Marketing & Advertising": 2656, "Miscellaneous": 1474, "Office Supplies": 582, "Payroll Taxes - Indirect": 1634, "Professional Fees": 1172, "Rent / Lease": 5128, "Repairs & Maintenance": 513, "Software Subscriptions": 853, "Utilities": 1135, "Vehicle Fuel & Maintenance": 2658, "Wages - Administrative / Indirect": 11668}}]}, "company_map": {"Hometown Restoration Co. (Sample)": {"revenue": 1000001.0, "cogs": 576731.0, "expenses": 374740.0, "profit": 48530.0, "margin": 4.85, "expense_breakdown": {"Depreciation": 21738, "Health / Benefits (Non-COGS)": 41999, "Insurance - Auto": 14498, "Insurance - General Liability": 24321, "Marketing & Advertising": 26959, "Miscellaneous": 12531, "Office Supplies": 5988, "Payroll Taxes - Indirect": 14000, "Professional Fees": 10974, "Rent / Lease": 54421, "Repairs & Maintenance": 5788, "Software Subscriptions": 8539, "Utilities": 10670, "Vehicle Fuel & Maintenance": 22314, "Wages - Administrative / Indirect": 100000}, "monthly_details": [{"label": "Jan 2025", "revenue": 75257.0, "cogs": 42870.0, "expenses": 29510.0, "profit": 2877.0, "margin": 3.82, "expense_breakdown": {"Depreciation": 1775, "Health / Benefits (Non-COGS)": 3465, "Insurance - Auto": 1156, "Insurance - General Liability": 1959, "Marketing & Advertising": 2042, "Miscellaneous": 771, "Office Supplies": 453, "Payroll Taxes - Indirect": 1054, "Professional Fees": 932, "Rent / Lease": 4640, "Repairs & Maintenance": 472, "Software Subscriptions": 765, "Utilities": 910, "Vehicle Fuel & Maintenance": 1590, "Wages - Administrative / Indirect": 7526}}, {"label": "Feb 2025", "revenue": 83336.0, "cogs": 48364.0, "expenses": 31789.0, "profit": 3183.0, "margin": 3.82, "expense_breakdown": {"Depreciation": 1861, "Health / Benefits (Non-COGS)": 3535, "Insurance - Auto": 1179, "Insurance - General Liability": 2055, "Marketing & Advertising": 2391, "Miscellaneous": 1252, "Office Supplies": 536, "Payroll Taxes - Indirect": 1167, "Professional Fees": 858, "Rent / Lease": 4510, "Repairs & Maintenance": 504, "Software Subscriptions": 685, "Utilities": 892, "Vehicle Fuel & Maintenance": 2030, "Wages - Administrative / Indirect": 8334}}, {"label": "Mar 2025", "revenue": 73022.0, "cogs": 41078.0, "expenses": 29326.0, "profit": 2618.0, "margin": 3.59, "expense_breakdown": {"Depreciation": 1829, "Health / Benefits (Non-COGS)": 3538, "Insurance - Auto": 1184, "Insurance - General Liability": 2020, "Marketing & Advertising": 1775, "Miscellaneous": 1118, "Office Supplies": 512, "Payroll Taxes - Indirect": 1022, "Professional Fees": 958, "Rent / Lease": 4567, "Repairs & Maintenance": 492, "Software Subscriptions": 680, "Utilities": 894, "Vehicle Fuel & Maintenance": 1435, "Wages - Administrative / Indirect": 7302}}, {"label": "Apr 2025", "revenue": 77754.0, "cogs": 44349.0, "expenses": 30614.0, "profit": 2791.0, "margin": 3.59, "expense_breakdown": {"Depreciation": 1789, "Health / Benefits (Non-COGS)": 3398, "Insurance - Auto": 1206, "Insurance - General Liability": 1986, "Marketing & Advertising": 2575, "Miscellaneous": 1092, "Office Supplies": 403, "Payroll Taxes - Indirect": 1088, "Professional Fees": 1022, "Rent / Lease": 4450, "Repairs & Maintenance": 465, "Software Subscriptions": 731, "Utilities": 861, "Vehicle Fuel & Maintenance": 1773, "Wages - Administrative / Indirect": 7775}}, {"label": "May 2025", "revenue": 67847.0, "cogs": 38803.0, "expenses": 28058.0, "profit": 986.0, "margin": 1.45, "expense_breakdown": {"Depreciation": 1811, "Health / Benefits (Non-COGS)": 3519, "Insurance - Auto": 1197, "Insurance - General Liability": 2005, "Marketing & Advertising": 1791, "Miscellaneous": 494, "Office Supplies": 505, "Payroll Taxes - Indirect": 950, "Professional Fees": 805, "Rent / Lease": 4602, "Repairs & Maintenance": 494, "Software Subscriptions": 699, "Utilities": 884, "Vehicle Fuel & Maintenance": 1517, "Wages - Administrative / Indirect": 6785}}, {"label": "Jun 2025", "revenue": 87951.0, "cogs": 51013.0, "expenses": 32280.0, "profit": 4658.0, "margin": 5.3, "expense_breakdown": {"Depreciation": 1817, "Health / Benefits (Non-COGS)": 3533, "Insurance - Auto": 1184, "Insurance - General Liability": 1974, "Marketing & Advertising": 2518, "Miscellaneous": 1114, "Office Supplies": 492, "Payroll Taxes - Indirect": 1231, "Professional Fees": 955, "Rent / Lease": 4497, "Repairs & Maintenance": 511, "Software Subscriptions": 738, "Utilities": 825, "Vehicle Fuel & Maintenance": 2096, "Wages - Administrative / Indirect": 8795}}, {"label": "Jul 2025", "revenue": 88575.0, "cogs": 52129.0, "expenses": 31863.0, "profit": 4583.0, "margin": 5.17, "expense_breakdown": {"Depreciation": 1782, "Health / Benefits (Non-COGS)": 3434, "Insurance - Auto": 1203, "Insurance - General Liability": 1985, "Marketing & Advertising": 2350, "Miscellaneous": 992, "Office Supplies": 530, "Payroll Taxes - Indirect": 1240, "Professional Fees": 752, "Rent / Lease": 4529, "Repairs & Maintenance": 507, "Software Subscriptions": 701, "Utilities": 926, "Vehicle Fuel & Maintenance": 2075, "Wages - Administrative / Indirect": 8857}}, {"label": "Aug 2025", "revenue": 95048.0, "cogs": 56021.0, "expenses": 33383.0, "profit": 5644.0, "margin": 5.94, "expense_breakdown": {"Depreciation": 1831, "Health / Benefits (Non-COGS)": 3641, "Insurance - Auto": 1228, "Insurance - General Liability": 2070, "Marketing & Advertising": 2317, "Miscellaneous": 1185, "Office Supplies": 552, "Payroll Taxes - Indirect": 1331, "Professional Fees": 886, "Rent / Lease": 4502, "Repairs & Maintenance": 530, "Software Subscriptions": 687, "Utilities": 859, "Vehicle Fuel & Maintenance": 2259, "Wages - Administrative / Indirect": 9505}}, {"label": "Sep 2025", "revenue": 71208.0, "cogs": 40967.0, "expenses": 29008.0, "profit": 1233.0, "margin": 1.73, "expense_breakdown": {"Depreciation": 1811, "Health / Benefits (Non-COGS)": 3465, "Insurance - Auto": 1260, "Insurance - General Liability": 1976, "Marketing & Advertising": 2067, "Miscellaneous": 867, "Office Supplies": 595, "Payroll Taxes - Indirect": 997, "Professional Fees": 906, "Rent / Lease": 4409, "Repairs & Maintenance": 553, "Software Subscriptions": 685, "Utilities": 849, "Vehicle Fuel & Maintenance": 1447, "Wages - Administrative / Indirect": 7121}}, {"label": "Oct 2025", "revenue": 99706.0, "cogs": 58714.0, "expenses": 34040.0, "profit": 6952.0, "margin": 6.97, "expense_breakdown": {"Depreciation": 1827, "Health / Benefits (Non-COGS)": 3491, "Insurance - Auto": 1224, "Insurance - General Liability": 2146, "Marketing & Advertising": 2220, "Miscellaneous": 1586, "Office Supplies": 505, "Payroll Taxes - Indirect": 1396, "Professional Fees": 927, "Rent / Lease": 4647, "Repairs & Maintenance": 402, "Software Subscriptions": 739, "Utilities": 901, "Vehicle Fuel & Maintenance": 2058, "Wages - Administrative / Indirect": 9971}}, {"label": "Nov 2025", "revenue": 87444.0, "cogs": 49535.0, "expenses": 32080.0, "profit": 5829.0, "margin": 6.67, "expense_breakdown": {"Depreciation": 1810, "Health / Benefits (Non-COGS)": 3548, "Insurance - Auto": 1227, "Insurance - General Liability": 2107, "Marketing & Advertising": 2680, "Miscellaneous": 831, "Office Supplies": 463, "Payroll Taxes - Indirect": 1224, "Professional Fees": 1035, "Rent / Lease": 4529, "Repairs & Maintenance": 439, "Software Subscriptions": 715, "Utilities": 918, "Vehicle Fuel & Maintenance": 1810, "Wages - Administrative / Indirect": 8744}}, {"label": "Dec 2025", "revenue": 92853.0, "cogs": 52888.0, "expenses": 32789.0, "profit": 7176.0, "margin": 7.73, "expense_breakdown": {"Depreciation": 1795, "Health / Benefits (Non-COGS)": 3432, "Insurance - Auto": 1250, "Insurance - General Liability": 2038, "Marketing & Advertising": 2233, "Miscellaneous": 1229, "Office Supplies": 442, "Payroll Taxes - Indirect": 1300, "Professional Fees": 938, "Rent / Lease": 4539, "Repairs & Maintenance": 419, "Software Subscriptions": 714, "Utilities": 951, "Vehicle Fuel & Maintenance": 2224, "Wages - Administrative / Indirect": 9285}}]}, "SoloDry Restoration (Sample)": {"revenue": 199999.0, "cogs": 113749.0, "expenses": 64171.0, "profit": 22079.0, "margin": 11.04, "expense_breakdown": {"Depreciation": 2997, "Health / Benefits (Non-COGS)": 2946, "Insurance - Auto": 3011, "Insurance - General Liability": 5375, "Marketing & Advertising": 3988, "Miscellaneous": 2029, "Office Supplies": 1483, "Payroll Taxes - Indirect": 2801, "Professional Fees": 3110, "Rent / Lease": 7332, "Repairs & Maintenance": 1431, "Software Subscriptions": 1466, "Utilities": 2127, "Vehicle Fuel & Maintenance": 4074, "Wages - Administrative / Indirect": 20001}, "monthly_details": [{"label": "Jan 2025", "revenue": 18479.0, "cogs": 10336.0, "expenses": 5860.0, "profit": 2283.0, "margin": 12.35, "expense_breakdown": {"Depreciation": 251, "Health / Benefits (Non-COGS)": 250, "Insurance - Auto": 256, "Insurance - General Liability": 444, "Marketing & Advertising": 432, "Miscellaneous": 224, "Office Supplies": 128, "Payroll Taxes - Indirect": 259, "Professional Fees": 295, "Rent / Lease": 602, "Repairs & Maintenance": 122, "Software Subscriptions": 136, "Utilities": 196, "Vehicle Fuel & Maintenance": 417, "Wages - Administrative / Indirect": 1848}}, {"label": "Feb 2025", "revenue": 19411.0, "cogs": 11193.0, "expenses": 5768.0, "profit": 2450.0, "margin": 12.62, "expense_breakdown": {"Depreciation": 249, "Health / Benefits (Non-COGS)": 228, "Insurance - Auto": 252, "Insurance - General Liability": 433, "Marketing & Advertising": 381, "Miscellaneous": 208, "Office Supplies": 121, "Payroll Taxes - Indirect": 272, "Professional Fees": 226, "Rent / Lease": 601, "Repairs & Maintenance": 124, "Software Subscriptions": 120, "Utilities": 195, "Vehicle Fuel & Maintenance": 417, "Wages - Administrative / Indirect": 1941}}, {"label": "Mar 2025", "revenue": 12856.0, "cogs": 7081.0, "expenses": 4656.0, "profit": 1119.0, "margin": 8.7, "expense_breakdown": {"Depreciation": 247, "Health / Benefits (Non-COGS)": 247, "Insurance - Auto": 246, "Insurance - General Liability": 445, "Marketing & Advertising": 226, "Miscellaneous": 120, "Office Supplies": 114, "Payroll Taxes - Indirect": 180, "Professional Fees": 260, "Rent / Lease": 611, "Repairs & Maintenance": 133, "Software Subscriptions": 113, "Utilities": 172, "Vehicle Fuel & Maintenance": 256, "Wages - Administrative / Indirect": 1286}}, {"label": "Apr 2025", "revenue": 15307.0, "cogs": 8574.0, "expenses": 5233.0, "profit": 1500.0, "margin": 9.8, "expense_breakdown": {"Depreciation": 249, "Health / Benefits (Non-COGS)": 243, "Insurance - Auto": 260, "Insurance - General Liability": 450, "Marketing & Advertising": 337, "Miscellaneous": 159, "Office Supplies": 132, "Payroll Taxes - Indirect": 214, "Professional Fees": 310, "Rent / Lease": 606, "Repairs & Maintenance": 121, "Software Subscriptions": 128, "Utilities": 190, "Vehicle Fuel & Maintenance": 303, "Wages - Administrative / Indirect": 1531}}, {"label": "May 2025", "revenue": 13486.0, "cogs": 7427.0, "expenses": 4819.0, "profit": 1240.0, "margin": 9.19, "expense_breakdown": {"Depreciation": 252, "Health / Benefits (Non-COGS)": 247, "Insurance - Auto": 251, "Insurance - General Liability": 439, "Marketing & Advertising": 242, "Miscellaneous": 132, "Office Supplies": 121, "Payroll Taxes - Indirect": 189, "Professional Fees": 244, "Rent / Lease": 651, "Repairs & Maintenance": 102, "Software Subscriptions": 130, "Utilities": 180, "Vehicle Fuel & Maintenance": 290, "Wages - Administrative / Indirect": 1349}}, {"label": "Jun 2025", "revenue": 13453.0, "cogs": 7461.0, "expenses": 4842.0, "profit": 1150.0, "margin": 8.55, "expense_breakdown": {"Depreciation": 253, "Health / Benefits (Non-COGS)": 253, "Insurance - Auto": 249, "Insurance - General Liability": 436, "Marketing & Advertising": 313, "Miscellaneous": 120, "Office Supplies": 113, "Payroll Taxes - Indirect": 188, "Professional Fees": 274, "Rent / Lease": 618, "Repairs & Maintenance": 91, "Software Subscriptions": 111, "Utilities": 177, "Vehicle Fuel & Maintenance": 301, "Wages - Administrative / Indirect": 1345}}, {"label": "Jul 2025", "revenue": 13195.0, "cogs": 7632.0, "expenses": 4816.0, "profit": 747.0, "margin": 5.66, "expense_breakdown": {"Depreciation": 251, "Health / Benefits (Non-COGS)": 251, "Insurance - Auto": 251, "Insurance - General Liability": 463, "Marketing & Advertising": 246, "Miscellaneous": 146, "Office Supplies": 134, "Payroll Taxes - Indirect": 185, "Professional Fees": 263, "Rent / Lease": 603, "Repairs & Maintenance": 153, "Software Subscriptions": 128, "Utilities": 168, "Vehicle Fuel & Maintenance": 254, "Wages - Administrative / Indirect": 1320}}, {"label": "Aug 2025", "revenue": 14889.0, "cogs": 8793.0, "expenses": 4962.0, "profit": 1134.0, "margin": 7.62, "expense_breakdown": {"Depreciation": 251, "Health / Benefits (Non-COGS)": 260, "Insurance - Auto": 243, "Insurance - General Liability": 471, "Marketing & Advertising": 258, "Miscellaneous": 120, "Office Supplies": 118, "Payroll Taxes - Indirect": 208, "Professional Fees": 262, "Rent / Lease": 594, "Repairs & Maintenance": 115, "Software Subscriptions": 121, "Utilities": 169, "Vehicle Fuel & Maintenance": 283, "Wages - Administrative / Indirect": 1489}}, {"label": "Sep 2025", "revenue": 17343.0, "cogs": 9963.0, "expenses": 5399.0, "profit": 1981.0, "margin": 11.42, "expense_breakdown": {"Depreciation": 251, "Health / Benefits (Non-COGS)": 238, "Insurance - Auto": 257, "Insurance - General Liability": 452, "Marketing & Advertising": 321, "Miscellaneous": 170, "Office Supplies": 115, "Payroll Taxes - Indirect": 243, "Professional Fees": 257, "Rent / Lease": 610, "Repairs & Maintenance": 136, "Software Subscriptions": 111, "Utilities": 166, "Vehicle Fuel & Maintenance": 338, "Wages - Administrative / Indirect": 1734}}, {"label": "Oct 2025", "revenue": 17131.0, "cogs": 9747.0, "expenses": 5522.0, "profit": 1862.0, "margin": 10.87, "expense_breakdown": {"Depreciation": 247, "Health / Benefits (Non-COGS)": 254, "Insurance - Auto": 254, "Insurance - General Liability": 445, "Marketing & Advertising": 368, "Miscellaneous": 212, "Office Supplies": 122, "Payroll Taxes - Indirect": 240, "Professional Fees": 267, "Rent / Lease": 628, "Repairs & Maintenance": 128, "Software Subscriptions": 110, "Utilities": 165, "Vehicle Fuel & Maintenance": 369, "Wages - Administrative / Indirect": 1713}}, {"label": "Nov 2025", "revenue": 20617.0, "cogs": 12054.0, "expenses": 5932.0, "profit": 2631.0, "margin": 12.76, "expense_breakdown": {"Depreciation": 247, "Health / Benefits (Non-COGS)": 244, "Insurance - Auto": 255, "Insurance - General Liability": 451, "Marketing & Advertising": 441, "Miscellaneous": 173, "Office Supplies": 125, "Payroll Taxes - Indirect": 289, "Professional Fees": 218, "Rent / Lease": 619, "Repairs & Maintenance": 112, "Software Subscriptions": 119, "Utilities": 165, "Vehicle Fuel & Maintenance": 412, "Wages - Administrative / Indirect": 2062}}, {"label": "Dec 2025", "revenue": 23832.0, "cogs": 13488.0, "expenses": 6362.0, "profit": 3982.0, "margin": 16.71, "expense_breakdown": {"Depreciation": 249, "Health / Benefits (Non-COGS)": 231, "Insurance - Auto": 237, "Insurance - General Liability": 446, "Marketing & Advertising": 423, "Miscellaneous": 245, "Office Supplies": 140, "Payroll Taxes - Indirect": 334, "Professional Fees": 234, "Rent / Lease": 589, "Repairs & Maintenance": 94, "Software Subscriptions": 139, "Utilities": 184, "Vehicle Fuel & Maintenance": 434, "Wages - Administrative / Indirect": 2383}}]}}};
+        // Dashboard state
+        let dashboardId = null;
+        let dashboardData = null;
         let expenseChart = null;
         let monthlyChart = null;
+
+        // Theme Management
+        function initTheme() {
+            const saved = localStorage.getItem('restor-theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('restor-theme', next);
+
+            // Redraw charts with new theme colors
+            if (dashboardData) {
+                updateDashboard();
+            }
+        }
+
+        function isDarkMode() {
+            return document.documentElement.getAttribute('data-theme') === 'dark';
+        }
+
+        // Get chart colors based on theme
+        function getChartColors() {
+            const style = getComputedStyle(document.documentElement);
+            return {
+                grid: style.getPropertyValue('--chart-grid').trim(),
+                text: style.getPropertyValue('--chart-text').trim(),
+                profitBg: style.getPropertyValue('--chart-profit-bg').trim(),
+                profitBorder: style.getPropertyValue('--chart-profit-border').trim(),
+                lossBg: style.getPropertyValue('--chart-loss-bg').trim(),
+                lossBorder: style.getPropertyValue('--chart-loss-border').trim(),
+            };
+        }
+
+        // Get dashboard ID from URL
+        function getDashboardId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        // Initialize dashboard
+        async function initDashboard() {
+            dashboardId = getDashboardId();
+
+            if (!dashboardId) {
+                window.location.href = '/';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/dashboards/${dashboardId}`);
+                if (!response.ok) throw new Error('Dashboard not found');
+
+                const dashboard = await response.json();
+                dashboardData = dashboard.data;
+
+                document.getElementById('dashboard-name').textContent = dashboard.name;
+                document.title = `${dashboard.name} - Restor Dashboard`;
+
+                populateFilters();
+                await loadConversations();
+                updateDashboard();
+
+                document.getElementById('loading-overlay').style.display = 'none';
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                alert('Error loading dashboard. Redirecting...');
+                window.location.href = '/';
+            }
+        }
+
+        function populateFilters() {
+            const companyFilter = document.getElementById('companyFilter');
+            const startPeriod = document.getElementById('startPeriod');
+            const endPeriod = document.getElementById('endPeriod');
+
+            companyFilter.innerHTML = '<option value="Overall">All Branches</option>';
+            dashboardData.branches.forEach(branch => {
+                companyFilter.innerHTML += `<option value="${branch}">${branch}</option>`;
+            });
+
+            startPeriod.innerHTML = '';
+            endPeriod.innerHTML = '';
+            dashboardData.periods.forEach((period, index) => {
+                startPeriod.innerHTML += `<option value="${period}">${period}</option>`;
+                endPeriod.innerHTML += `<option value="${period}" ${index === dashboardData.periods.length - 1 ? 'selected' : ''}>${period}</option>`;
+            });
+        }
 
         function formatCurrency(value) {
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
@@ -447,23 +1083,20 @@
             const startPeriod = document.getElementById('startPeriod').value;
             const endPeriod = document.getElementById('endPeriod').value;
 
-            // Get relevant monthly details
-            const monthlyData = selectedBranch === 'Overall' ? dashboardData.overall.monthly_details : dashboardData.company_map[selectedBranch].monthly_details;
-            
-            // Find indices for slicing
+            const monthlyData = selectedBranch === 'Overall'
+                ? dashboardData.overall.monthly_details
+                : dashboardData.company_map[selectedBranch].monthly_details;
+
             const startIndex = dashboardData.periods.indexOf(startPeriod);
             const endIndex = dashboardData.periods.indexOf(endPeriod);
-            
-            // Ensure logical range
+
             if (startIndex > endIndex) {
                 alert("Start period cannot be after end period");
                 return;
             }
 
-            // Filter data by range
             const filteredMonths = monthlyData.slice(startIndex, endIndex + 1);
 
-            // Aggregate metrics
             let totalRevenue = 0, totalCOGS = 0, totalExpenses = 0, totalProfit = 0;
             let combinedExpenses = {};
 
@@ -472,23 +1105,20 @@
                 totalCOGS += m.cogs;
                 totalExpenses += m.expenses;
                 totalProfit += m.profit;
-                
-                // Merge expense breakdowns
+
                 for (const [account, amount] of Object.entries(m.expense_breakdown)) {
                     combinedExpenses[account] = (combinedExpenses[account] || 0) + amount;
                 }
             });
 
-            // Update Cards
             document.getElementById('cardRevenue').innerText = formatCurrency(totalRevenue);
             document.getElementById('cardCOGS').innerText = formatCurrency(totalCOGS);
             document.getElementById('cardExpenses').innerText = formatCurrency(totalExpenses);
-            
+
             const profitEl = document.getElementById('cardProfit');
             profitEl.innerText = formatCurrency(totalProfit);
             profitEl.className = 'stat-value ' + (totalProfit >= 0 ? 'profit-positive' : 'profit-negative');
 
-            // Update Best/Worst Month (within selected range)
             if (filteredMonths.length > 0) {
                 const best = filteredMonths.reduce((prev, curr) => (prev.profit > curr.profit) ? prev : curr);
                 const worst = filteredMonths.reduce((prev, curr) => (prev.profit < curr.profit) ? prev : curr);
@@ -496,14 +1126,10 @@
                 document.getElementById('worstMonthText').innerText = `${worst.label} (${formatCurrency(worst.profit)})`;
             }
 
-            // Update Charts
             updateChart(combinedExpenses);
             updateMonthlyChart(filteredMonths);
-
-            // Update Table
             updateExpenseTable(combinedExpenses);
-            
-            // Update Branch Comparison (Only for overall view)
+
             if (selectedBranch === 'Overall') {
                 updateBranchComparison(startIndex, endIndex);
                 document.getElementById('branchComparisonContainer').style.display = 'block';
@@ -518,33 +1144,31 @@
 
             dashboardData.branches.forEach(branch => {
                 const branchData = dashboardData.company_map[branch].monthly_details.slice(startIndex, endIndex + 1);
-                
+
                 let bRev = 0, bProfit = 0;
                 branchData.forEach(m => {
                     bRev += m.revenue;
                     bProfit += m.profit;
                 });
 
-                const bMargin = bRev ? ((bProfit / bRev) * 100).toFixed(2) : 0;
+                const bMargin = bRev ? ((bProfit / bRev) * 100).toFixed(1) : 0;
                 const profitClass = bProfit >= 0 ? 'profit-positive' : 'profit-negative';
 
-                const row = `<tr>
-                    <td>${branch}</td>
+                tbody.innerHTML += `<tr>
+                    <td style="color: var(--text-primary)">${branch}</td>
                     <td>${formatCurrency(bRev)}</td>
                     <td class="${profitClass}">${formatCurrency(bProfit)}</td>
                     <td>${bMargin}%</td>
                 </tr>`;
-                tbody.innerHTML += row;
             });
         }
 
         function updateChart(expenses) {
             const labels = Object.keys(expenses);
             const values = Object.values(expenses);
-            
-            if (expenseChart) {
-                expenseChart.destroy();
-            }
+            const colors = getChartColors();
+
+            if (expenseChart) expenseChart.destroy();
 
             const ctx = document.getElementById('expenseChart').getContext('2d');
             expenseChart = new Chart(ctx, {
@@ -554,24 +1178,32 @@
                     datasets: [{
                         data: values,
                         backgroundColor: [
-                            '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#6366f1', '#8b5cf6', '#ec4899', '#64748b',
-                            '#06b6d4', '#84cc16', '#f43f5e', '#a855f7', '#0ea5e9', '#14b8a6', '#f97316'
-                        ]
+                            '#0071e3', '#5856d6', '#ff9500', '#34c759', '#ff3b30',
+                            '#af52de', '#00c7be', '#ff2d55', '#64d2ff', '#30d158',
+                            '#ff9f0a', '#bf5af2', '#5ac8fa', '#ffd60a', '#ac8e68'
+                        ],
+                        borderWidth: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } },
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 12,
+                                font: { size: 11 },
+                                color: colors.text
+                            }
+                        },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.parsed;
+                                label: function (context) {
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ${formatCurrency(value)} (${percentage}%)`;
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    return `${context.label}: ${formatCurrency(context.parsed)} (${percentage}%)`;
                                 }
                             }
                         }
@@ -583,57 +1215,24 @@
         function updateExpenseTable(expenses) {
             const tbody = document.getElementById('expenseTableBody');
             tbody.innerHTML = '';
-            
-            // Sort by amount descending
-            const sortedItems = Object.entries(expenses).sort((a, b) => b[1] - a[1]);
-            
-            sortedItems.forEach(([account, amount]) => {
-                const row = `<tr><td>${account}</td><td>${formatCurrency(amount)}</td></tr>`;
-                tbody.innerHTML += row;
+
+            const sorted = Object.entries(expenses).sort((a, b) => b[1] - a[1]);
+
+            sorted.forEach(([account, amount]) => {
+                tbody.innerHTML += `<tr><td style="color: var(--text-primary)">${account}</td><td>${formatCurrency(amount)}</td></tr>`;
             });
 
-            if (sortedItems.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">No expenses recorded</td></tr>';
-            }
-        }
-
-        // Chatbot Logic
-        function toggleChat() {
-            const container = document.getElementById('chat-container');
-            container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            if (!message) return;
-
-            addMessage(message, 'user');
-            input.value = '';
-
-            try {
-                const response = await fetch('http://localhost:8000/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: message,
-                        context: dashboardData
-                    })
-                });
-                const data = await response.json();
-                addMessage(data.reply || data.detail || 'Error communicating with AI Assistant', 'bot');
-            } catch (error) {
-                addMessage('Error: ' + error.message, 'bot');
+            if (sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">No expenses</td></tr>';
             }
         }
 
         function updateMonthlyChart(trends) {
             const labels = trends.map(t => t.label);
             const profits = trends.map(t => t.profit);
-            
-            if (monthlyChart) {
-                monthlyChart.destroy();
-            }
+            const colors = getChartColors();
+
+            if (monthlyChart) monthlyChart.destroy();
 
             const ctx = document.getElementById('monthlyChart').getContext('2d');
             monthlyChart = new Chart(ctx, {
@@ -643,9 +1242,10 @@
                     datasets: [{
                         label: 'Net Profit',
                         data: profits,
-                        backgroundColor: profits.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.6)' : 'rgba(239, 68, 68, 0.6)'),
-                        borderColor: profits.map(v => v >= 0 ? '#10b981' : '#ef4444'),
-                        borderWidth: 1
+                        backgroundColor: profits.map(v => v >= 0 ? colors.profitBg : colors.lossBg),
+                        borderColor: profits.map(v => v >= 0 ? colors.profitBorder : colors.lossBorder),
+                        borderWidth: 1,
+                        borderRadius: 4
                     }]
                 },
                 options: {
@@ -657,26 +1257,90 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { callback: value => formatCurrency(value) }
+                            grid: { color: colors.grid },
+                            ticks: {
+                                callback: value => formatCurrency(value),
+                                color: colors.text
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: colors.text }
                         }
                     }
                 }
             });
         }
 
-        function addMessage(text, sender) {
+        // Chat functions
+        function toggleChat() {
+            const container = document.getElementById('chat-container');
+            container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        async function loadConversations() {
+            try {
+                const response = await fetch(`/api/dashboards/${dashboardId}/conversations`);
+                const data = await response.json();
+
+                data.conversations.forEach(conv => {
+                    addMessage(conv.user_message, 'user', false);
+                    addMessage(conv.ai_response, 'bot', false);
+                });
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        dashboard_id: parseInt(dashboardId),
+                        context: dashboardData
+                    })
+                });
+                const data = await response.json();
+                addMessage(data.reply || data.detail || 'Error communicating with Restor AI', 'bot');
+            } catch (error) {
+                addMessage('Error: ' + error.message, 'bot');
+            }
+        }
+
+        async function clearChat() {
+            if (!confirm('Clear all conversation history?')) return;
+
+            try {
+                await fetch(`/api/dashboards/${dashboardId}/conversations`, { method: 'DELETE' });
+                document.getElementById('chat-messages').innerHTML = '<div class="message bot">Hello! I\'m Restor AI, your restoration business analyst. Ask me anything about your financial data.</div>';
+            } catch (error) {
+                console.error('Error clearing chat:', error);
+            }
+        }
+
+        function addMessage(text, sender, scroll = true) {
             const messages = document.getElementById('chat-messages');
             const div = document.createElement('div');
             div.className = `message ${sender}`;
             div.innerText = text;
             messages.appendChild(div);
-            messages.scrollTop = messages.scrollHeight;
+            if (scroll) messages.scrollTop = messages.scrollHeight;
         }
 
         // Initialize
-        updateDashboard();
+        initTheme();
+        initDashboard();
     </script>
 </body>
-</html>
 
-    
+</html>

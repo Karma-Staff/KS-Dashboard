@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restor Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============= Design System - Light Theme (Default) ============= */
+        :root {
+            /* Backgrounds */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --bg-tertiary: #e8e8ed;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f5f5f7;
+
+            /* Text */
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-tertiary: #86868b;
+
+            /* Accents */
+            --accent-primary: #0071e3;
+            --accent-primary-hover: #0077ed;
+            --accent-success: #34c759;
+            --accent-danger: #ff3b30;
+            --accent-warning: #ff9500;
+
+            /* Borders & Shadows */
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+            /* Chart Colors */
+            --chart-grid: rgba(0, 0, 0, 0.06);
+            --chart-text: #6e6e73;
+        }
+
+        /* ============= Dark Theme ============= */
+        [data-theme="dark"] {
+            /* Backgrounds */
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --bg-card: #1c1c1e;
+            --bg-card-hover: #2c2c2e;
+
+            /* Text */
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --text-tertiary: #6e6e73;
+
+            /* Accents - slightly brighter for dark mode */
+            --accent-primary: #0a84ff;
+            --accent-primary-hover: #409cff;
+            --accent-success: #30d158;
+            --accent-danger: #ff453a;
+            --accent-warning: #ff9f0a;
+
+            /* Borders & Shadows */
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+            /* Chart Colors */
+            --chart-grid: rgba(255, 255, 255, 0.1);
+            --chart-text: #a1a1a6;
+        }
+
+        /* ============= Base Styles ============= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* ============= Header ============= */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 48px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary), #5856d6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 22px;
+            height: 22px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .byline {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        .theme-toggle .moon-icon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        /* Upload Button */
+        .upload-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-btn:hover {
+            background: var(--accent-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .upload-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* ============= Dashboard Grid ============= */
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .dashboards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .dashboard-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-primary), #5856d6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--accent-danger);
+        }
+
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .card-title input {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--accent-primary);
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 8px;
+            width: 100%;
+            outline: none;
+        }
+
+        .card-date {
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+        }
+
+        /* ============= Empty State ============= */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-state-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* ============= Loading ============= */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============= Modal ============= */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .modal p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn.cancel {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .modal-btn.cancel:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .modal-btn.delete {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        .modal-btn.delete:hover {
+            opacity: 0.9;
+        }
+
+        /* ============= Upload Progress ============= */
+        .upload-progress {
+            display: none;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .upload-progress span {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), #5856d6);
+            width: 0%;
+            animation: progress 2s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% {
+                width: 0%;
+            }
+
+            50% {
+                width: 70%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        /* ============= Responsive ============= */
+        @media (max-width: 640px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .upload-btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .dashboards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="logo-text">Restor<span>Dashboard</span></div>
+                    <div class="byline">by Karma Staff</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+                <button class="upload-btn" onclick="document.getElementById('file-input').click()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    New Dashboard
+                </button>
+                <input type="file" id="file-input" accept=".xlsx,.xls,.csv" onchange="handleFileUpload(event)">
+            </div>
+        </header>
+
+        <div class="upload-progress" id="upload-progress">
+            <span>Processing your file...</span>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="color: var(--text-secondary);">Loading dashboards...</p>
+        </div>
+
+        <div id="dashboards-section">
+            <h2 class="section-title">Your Dashboards</h2>
+            <div class="dashboards-grid" id="dashboards-grid"></div>
+        </div>
+
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <div class="empty-state-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </div>
+            <h2>No Dashboards Yet</h2>
+            <p>Upload an Excel or CSV file to create your first financial dashboard.</p>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal">
+            <h3>Delete Dashboard?</h3>
+            <p>This will permanently delete this dashboard and all conversation history. This action cannot be undone.
+            </p>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="modal-btn delete" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '';
+        let dashboards = [];
+        let dashboardToDelete = null;
+
+        // Theme Management
+        function initTheme() {
+            const saved = localStorage.getItem('restor-theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('restor-theme', next);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        // Load dashboards
+        async function loadDashboards() {
+            const grid = document.getElementById('dashboards-grid');
+            const loading = document.getElementById('loading');
+            const emptyState = document.getElementById('empty-state');
+            const section = document.getElementById('dashboards-section');
+
+            loading.style.display = 'block';
+            section.style.display = 'none';
+            emptyState.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboards`);
+                const data = await response.json();
+                dashboards = data.dashboards;
+
+                loading.style.display = 'none';
+
+                if (dashboards.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                section.style.display = 'block';
+                grid.innerHTML = '';
+                dashboards.forEach(dashboard => {
+                    grid.innerHTML += createDashboardCard(dashboard);
+                });
+            } catch (error) {
+                loading.style.display = 'none';
+                console.error('Error loading dashboards:', error);
+            }
+        }
+
+        // Create dashboard card
+        function createDashboardCard(dashboard) {
+            return `
+                <div class="dashboard-card" onclick="openDashboard(${dashboard.id}, event)">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-btn" onclick="startRename(${dashboard.id}, event)" title="Rename">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </button>
+                            <button class="action-btn delete" onclick="showDeleteModal(${dashboard.id}, event)" title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-title" id="title-${dashboard.id}">${dashboard.name}</div>
+                    <div class="card-date">Created ${formatDate(dashboard.created_at)}</div>
+                </div>
+            `;
+        }
+
+        // Open dashboard
+        function openDashboard(id, event) {
+            if (event.target.closest('.card-actions')) return;
+            window.location.href = `/dashboard?id=${id}`;
+        }
+
+        // Handle file upload
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const uploadProgress = document.getElementById('upload-progress');
+            uploadProgress.style.display = 'block';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboards`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Upload failed');
+                }
+
+                const data = await response.json();
+                window.location.href = `/dashboard?id=${data.id}`;
+            } catch (error) {
+                uploadProgress.style.display = 'none';
+                alert('Error uploading file: ' + error.message);
+            }
+
+            event.target.value = '';
+        }
+
+        // Rename functions
+        function startRename(id, event) {
+            event.stopPropagation();
+            const titleEl = document.getElementById(`title-${id}`);
+            const currentName = titleEl.textContent;
+
+            titleEl.innerHTML = `<input type="text" value="${currentName}" onblur="finishRename(${id}, this)" onkeypress="if(event.key==='Enter')this.blur()" autofocus>`;
+            titleEl.querySelector('input').focus();
+            titleEl.querySelector('input').select();
+        }
+
+        async function finishRename(id, input) {
+            const newName = input.value.trim() || 'Untitled';
+            const titleEl = document.getElementById(`title-${id}`);
+
+            try {
+                await fetch(`${API_BASE}/api/dashboards/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: newName })
+                });
+
+                titleEl.textContent = newName;
+            } catch (error) {
+                console.error('Error renaming:', error);
+                titleEl.textContent = input.defaultValue;
+            }
+        }
+
+        // Delete modal
+        function showDeleteModal(id, event) {
+            event.stopPropagation();
+            dashboardToDelete = id;
+            document.getElementById('delete-modal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            dashboardToDelete = null;
+            document.getElementById('delete-modal').style.display = 'none';
+        }
+
+        async function confirmDelete() {
+            if (!dashboardToDelete) return;
+
+            try {
+                await fetch(`${API_BASE}/api/dashboards/${dashboardToDelete}`, {
+                    method: 'DELETE'
+                });
+
+                closeDeleteModal();
+                loadDashboards();
+            } catch (error) {
+                console.error('Error deleting:', error);
+                alert('Error deleting dashboard');
+            }
+        }
+
+        // Initialize
+        initTheme();
+        loadDashboards();
+    </script>
+</body>
+
+</html>
