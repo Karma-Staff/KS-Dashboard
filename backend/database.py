@@ -9,8 +9,14 @@ import os
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 
-# Database file path (same directory as this script)
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dashboard.db")
+# Database file path support for Render Persistent Disks
+# Set PERSISTENT_DATA_DIR to the mount path of your persistent disk (e.g., /data)
+DATA_DIR = os.getenv("PERSISTENT_DATA_DIR")
+if DATA_DIR and os.path.isdir(DATA_DIR):
+    DB_PATH = os.path.join(DATA_DIR, "dashboard.db")
+else:
+    # Default to local directory for development
+    DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dashboard.db")
 
 
 def get_connection():
