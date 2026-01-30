@@ -9,11 +9,13 @@ from fastapi.responses import FileResponse, RedirectResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from google import genai
+from typing import Dict, Any
 import pandas as pd
 
 # Local imports
 import database as db
 from analyze_data import analyze_data
+from quickbooks_converter import get_conversion_preview, finalize_conversion
 
 load_dotenv()
 
@@ -27,10 +29,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-api_key = os.getenv("GEMINI_API_KEY")
-client = None
-if api_key:
-    client = genai.Client(api_key=api_key)
+def get_client():
+    """Get the Gemini client, ensuring the API key is read from the environment."""
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    return genai.Client(api_key=api_key)
+
+client = get_client()
 
 # Get paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,6 +57,11 @@ class ChatRequest(BaseModel):
 
 class DashboardRename(BaseModel):
     name: str
+
+
+class QuickBooksFinalizeRequest(BaseModel):
+    raw_ai_result: Dict[str, Any]
+    adjustments: Dict[str, Any]
 
 
 # ============= Static File Serving =============
@@ -82,35 +93,86 @@ async def list_dashboards():
 
 @app.post("/api/dashboards")
 async def create_dashboard(file: UploadFile = File(...)):
-    """Upload an Excel/CSV file and create a new dashboard."""
+    """Upload an Excel/CSV/PDF file and create a new dashboard."""
     
     # Validate file type
     filename = file.filename.lower()
-    if not (filename.endswith('.xlsx') or filename.endswith('.xls') or filename.endswith('.csv')):
+    if not (filename.endswith('.xlsx') or filename.endswith('.xls') or filename.endswith('.csv') or filename.endswith('.pdf')):
         raise HTTPException(
             status_code=400, 
-            detail="Invalid file type. Please upload .xlsx, .xls, or .csv files."
+            detail="Invalid file type. Please upload .xlsx, .xls, .csv, or .pdf files."
         )
     
     try:
         # Read file content
         content = await file.read()
         
-        # Parse based on file type
+        # Check if it's potentially a QuickBooks file
+        is_quickbooks = False
+        if filename.endswith('.pdf'):
+            is_quickbooks = True
+        elif filename.endswith('.xlsx') or filename.endswith('.xls') or filename.endswith('.csv'):
+            try:
+                # Basic check for QB keywords in the first few rows
+                if filename.endswith('.csv'):
+                    check_df = pd.read_csv(io.BytesIO(content), nrows=10, header=None)
+                else:
+                    check_df = pd.read_excel(io.BytesIO(content), nrows=10, header=None)
+                
+                header_text = check_df.to_string().lower()
+                if "profit & loss" in header_text or "profit and loss" in header_text or ("income" in header_text and "expenses" in header_text) or ("revenue" in header_text and "expense" in header_text):
+                    is_quickbooks = True
+            except:
+                pass
+
+        # Handle QuickBooks reports (PDF/Excel/CSV)
+        if is_quickbooks:
+            from quickbooks_converter import convert_quickbooks_file
+            
+            api_key = os.getenv("GEMINI_API_KEY")
+            if not api_key:
+                raise HTTPException(status_code=500, detail="Gemini API Key (GEMINI_API_KEY) not found in environment.")
+                
+            # Convert QB report to flat DataFrame using AI
+            df = convert_quickbooks_file(content, filename, api_key)
+            
+            # Save the flat data to a temporary CSV for analysis
+            temp_csv_path = os.path.join(DATA_DIR, f"temp_qb_{os.getpid()}.csv")
+            try:
+                df.to_csv(temp_csv_path, index=False)
+                # Process data for dashboard visualizations
+                data = analyze_data(temp_csv_path)
+            finally:
+                if os.path.exists(temp_csv_path):
+                    os.remove(temp_csv_path)
+            
+            # Get company name from data or default to filename
+            company_name = df['Company'].iloc[0] if not df.empty else "QuickBooks Dashboard"
+            name = company_name if company_name != "Unknown Company" else db.get_next_untitled_name()
+            
+            # Save to database
+            dashboard_id = db.create_dashboard(name, data)
+            
+            return {
+                "id": dashboard_id,
+                "name": name,
+                "message": "QuickBooks report processed and dashboard created successfully"
+            }
+
+        # Standard dashboard creation for flat files (CSV/Excel)
         if filename.endswith('.csv'):
             df = pd.read_csv(io.BytesIO(content))
         else:
             df = pd.read_excel(io.BytesIO(content))
         
         # Save temporarily to process with existing analyze_data function
-        temp_csv_path = os.path.join(DATA_DIR, "temp_upload.csv")
-        df.to_csv(temp_csv_path, index=False)
-        
-        # Process data using existing analyze_data function
-        data = analyze_data(temp_csv_path)
-        
-        # Clean up temp file
-        os.remove(temp_csv_path)
+        temp_csv_path = os.path.join(DATA_DIR, f"temp_{os.getpid()}.csv")
+        try:
+            df.to_csv(temp_csv_path, index=False)
+            data = analyze_data(temp_csv_path)
+        finally:
+            if os.path.exists(temp_csv_path):
+                os.remove(temp_csv_path)
         
         # Get next untitled name
         name = db.get_next_untitled_name()
@@ -125,7 +187,10 @@ async def create_dashboard(file: UploadFile = File(...)):
         }
         
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+
 
 
 @app.get("/api/dashboards/{dashboard_id}")
@@ -186,8 +251,11 @@ async def clear_conversations(dashboard_id: int):
 @app.post("/chat")
 async def chat(request: ChatRequest):
     """Handle chat messages and save to database."""
+    global client
     if not client:
-        raise HTTPException(status_code=500, detail="Gemini API Key not configured in .env")
+        client = get_client()
+        if not client:
+            raise HTTPException(status_code=500, detail="Gemini API Key not configured in .env")
 
     # Verify dashboard exists
     dashboard = db.get_dashboard(request.dashboard_id)
@@ -245,6 +313,65 @@ async def chat(request: ChatRequest):
         db.save_conversation(request.dashboard_id, request.message, ai_reply)
 
         return {"reply": ai_reply}
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+class AnalyzeRequest(BaseModel):
+    dashboard_id: int
+    context: dict
+
+
+@app.post("/analyze")
+async def analyze(request: AnalyzeRequest):
+    """Generate AI analysis and recommendations for the dashboard data."""
+    global client
+    if not client:
+        client = get_client()
+        if not client:
+            raise HTTPException(status_code=500, detail="Gemini API Key not configured in .env")
+
+    # Verify dashboard exists
+    dashboard = db.get_dashboard(request.dashboard_id)
+    if not dashboard:
+        raise HTTPException(status_code=404, detail="Dashboard not found")
+
+    try:
+        # Pre-defined analysis prompt
+        analysis_prompt = """
+        Role: You are Restor AI, an Expert Financial Analyst specializing in restoration businesses.
+        
+        Task: Analyze the provided financial dashboard data and provide a comprehensive analysis with actionable recommendations.
+        
+        Your analysis should include:
+        1. **Financial Health Overview**: A brief assessment of the overall financial health based on the data.
+        2. **Key Observations**: 2-3 important findings from the data (trends, anomalies, opportunities).
+        3. **Actionable Recommendations**: 2-3 specific, actionable steps the business owner can take to improve performance.
+        
+        Rules for your response:
+        - Be direct and specific. Reference actual numbers from the data.
+        - Format dollar amounts as currency (e.g., $1,200.00).
+        - Keep the response concise but insightful - no more than 300 words.
+        - Use restoration industry benchmarks (15-25% net margin for healthy businesses).
+        - Do not use markdown formatting like ** or headers. Use plain text with line breaks.
+        - Separate sections with a blank line for readability.
+        """
+
+        prompt = f"""
+        {analysis_prompt}
+
+        Dashboard Data for Analysis:
+        {json.dumps(request.context, indent=2)}
+        """
+
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt
+        )
+
+        return {"analysis": response.text}
     except Exception as e:
         import traceback
         traceback.print_exc()
