@@ -78,8 +78,26 @@ async def dashboard_page():
     return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Render."""
+    return {"status": "healthy", "database": db.DB_PATH, "version": "3.1.0"}
+
+
 # Mount static files (CSS, JS, etc.)
 app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
+
+# Custom exception handler to ensure JSON responses on errors
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    import traceback
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal Server Error: {str(exc)}", "type": str(type(exc).__name__)}
+    )
+
+from fastapi.responses import JSONResponse
 
 
 # ============= Dashboard API Endpoints =============
@@ -137,7 +155,9 @@ async def create_dashboard(file: UploadFile = File(...)):
             df = convert_quickbooks_file(content, filename, api_key)
             
             # Save the flat data to a temporary CSV for analysis
-            temp_csv_path = os.path.join(DATA_DIR, f"temp_qb_{os.getpid()}.csv")
+            # Use /tmp on Linux/Render for guaranteed writability if possible
+            temp_dir = "/tmp" if os.name != 'nt' and os.path.exists("/tmp") else DATA_DIR
+            temp_csv_path = os.path.join(temp_dir, f"temp_qb_{os.getpid()}.csv")
             try:
                 df.to_csv(temp_csv_path, index=False)
                 # Process data for dashboard visualizations
@@ -166,7 +186,8 @@ async def create_dashboard(file: UploadFile = File(...)):
             df = pd.read_excel(io.BytesIO(content))
         
         # Save temporarily to process with existing analyze_data function
-        temp_csv_path = os.path.join(DATA_DIR, f"temp_{os.getpid()}.csv")
+        temp_dir = "/tmp" if os.name != 'nt' and os.path.exists("/tmp") else DATA_DIR
+        temp_csv_path = os.path.join(temp_dir, f"temp_{os.getpid()}.csv")
         try:
             df.to_csv(temp_csv_path, index=False)
             data = analyze_data(temp_csv_path)

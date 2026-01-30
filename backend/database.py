@@ -10,14 +10,21 @@ from datetime import datetime
 from typing import Optional, List, Dict, Any
 
 # Database file path support for Render Persistent Disks
-# Set PERSISTENT_DATA_DIR to the mount path of your persistent disk (e.g., /data)
-DATA_DIR = os.getenv("PERSISTENT_DATA_DIR")
-if DATA_DIR and os.path.isdir(DATA_DIR):
-    DB_PATH = os.path.join(DATA_DIR, "dashboard.db")
+DATA_DIR_PATH = os.getenv("PERSISTENT_DATA_DIR")
+if DATA_DIR_PATH and os.path.exists(os.path.dirname(DATA_DIR_PATH)):
+    # Ensure the directory exists
+    if not os.path.exists(DATA_DIR_PATH):
+        try:
+            os.makedirs(DATA_DIR_PATH, exist_ok=True)
+        except:
+            pass
+    DB_PATH = os.path.join(DATA_DIR_PATH, "dashboard.db")
 else:
     # Default to local directory for development
-    DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dashboard.db")
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    DB_PATH = os.path.join(base_path, "dashboard.db")
 
+print(f"DATABASE PATH: {DB_PATH}")
 
 def get_connection():
     """Get a database connection with row factory for dict-like access."""
