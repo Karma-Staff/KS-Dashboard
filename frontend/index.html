@@ -495,47 +495,52 @@
 
         /* ============= Restor AI Chatbot ============= */
         #chat-toggle {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
             background: linear-gradient(135deg, var(--accent-primary), #5856d6);
             color: white;
             border: none;
             cursor: pointer;
-            box-shadow: var(--shadow-lg);
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            z-index: 1000;
+            gap: 8px;
             transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--shadow-sm);
         }
 
         #chat-toggle:hover {
-            transform: scale(1.05);
+            transform: scale(1.02);
+            box-shadow: var(--shadow-md);
         }
 
         #chat-toggle svg {
-            width: 26px;
-            height: 26px;
+            width: 18px;
+            height: 18px;
         }
 
         #chat-container {
             position: fixed;
-            bottom: 92px;
-            right: 24px;
-            width: 380px;
-            height: 520px;
+            top: 0;
+            right: 0;
+            width: 30%;
+            min-width: 380px;
+            height: 100vh;
             background: var(--bg-card);
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
             display: none;
             flex-direction: column;
-            z-index: 1000;
+            z-index: 1001;
             overflow: hidden;
-            border: 1px solid var(--border-color);
+            border-left: 1px solid var(--border-color);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #chat-container.open {
+            display: flex;
+            transform: translateX(0);
         }
 
         .chat-header {
@@ -642,6 +647,46 @@
             border-bottom-left-radius: 4px;
         }
 
+        /* Typing indicator animation */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 16px 20px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--text-tertiary);
+            border-radius: 50%;
+            animation: typing-bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing-bounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+
         .chat-input-area {
             padding: 16px;
             background: var(--bg-card);
@@ -684,6 +729,63 @@
 
         #chat-send:hover {
             background: var(--accent-primary-hover);
+        }
+
+        /* ============= Analysis Section ============= */
+        .analysis-section {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .analysis-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .analysis-header h3 svg {
+            width: 22px;
+            height: 22px;
+            color: var(--accent-primary);
+        }
+
+        .analysis-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.9375rem;
+            white-space: pre-wrap;
+        }
+
+        .analysis-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            gap: 16px;
+            color: var(--text-tertiary);
+        }
+
+        .analysis-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
 
         /* ============= Responsive ============= */
@@ -730,9 +832,12 @@
             }
 
             #chat-container {
-                width: calc(100% - 32px);
-                right: 16px;
-                height: 70vh;
+                width: 100%;
+                min-width: unset;
+            }
+
+            #chat-toggle span {
+                display: none;
             }
         }
     </style>
@@ -767,6 +872,13 @@
             </div>
             <div class="nav-right">
                 <span class="dashboard-name" id="dashboard-name"></span>
+                <button id="chat-toggle" onclick="toggleChat()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <span>Restor AI</span>
+                </button>
                 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
                     <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -881,6 +993,24 @@
             </table>
         </div>
 
+        <div class="analysis-section" id="analysis-section">
+            <div class="analysis-header">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9l-.707.707M12 18.5a6 6 0 100-12 6 6 0 000 12z" />
+                    </svg>
+                    Analysis & Recommendations
+                </h3>
+            </div>
+            <div id="analysis-content" class="analysis-content">
+                <div class="analysis-loading">
+                    <div class="analysis-spinner"></div>
+                    <div>Generating insights...</div>
+                </div>
+            </div>
+        </div>
+
         <div class="faq-section">
             <h3>Business FAQ</h3>
 
@@ -932,13 +1062,7 @@
         </div>
     </div>
 
-    <!-- Restor AI Chatbot -->
-    <button id="chat-toggle" onclick="toggleChat()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-        </svg>
-    </button>
+    <!-- Restor AI Chatbot (moved to nav) -->
 
     <div id="chat-container">
         <div class="chat-header">
@@ -999,6 +1123,32 @@
             // Redraw charts with new theme colors
             if (dashboardData) {
                 updateDashboard();
+            }
+        }
+
+        async function fetchAnalysis() {
+            const contentDiv = document.getElementById('analysis-content');
+            contentDiv.innerHTML = `
+                <div class="analysis-loading">
+                    <div class="analysis-spinner"></div>
+                    <div>Generating insights...</div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        dashboard_id: parseInt(dashboardId),
+                        context: dashboardData
+                    })
+                });
+                const data = await response.json();
+                contentDiv.innerHTML = data.analysis || 'Unable to generate analysis at this time.';
+            } catch (error) {
+                console.error('Error fetching analysis:', error);
+                contentDiv.innerHTML = 'Error loading analysis and recommendations.';
             }
         }
 
@@ -1136,6 +1286,9 @@
             } else {
                 document.getElementById('branchComparisonContainer').style.display = 'none';
             }
+
+            // Fetch AI Analysis based on new data
+            fetchAnalysis();
         }
 
         function updateBranchComparison(startIndex, endIndex) {
@@ -1275,7 +1428,7 @@
         // Chat functions
         function toggleChat() {
             const container = document.getElementById('chat-container');
-            container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
+            container.classList.toggle('open');
         }
 
         async function loadConversations() {
@@ -1300,6 +1453,9 @@
             addMessage(message, 'user');
             input.value = '';
 
+            // Show typing indicator
+            showTypingIndicator();
+
             try {
                 const response = await fetch('/chat', {
                     method: 'POST',
@@ -1311,10 +1467,27 @@
                     })
                 });
                 const data = await response.json();
+                hideTypingIndicator();
                 addMessage(data.reply || data.detail || 'Error communicating with Restor AI', 'bot');
             } catch (error) {
+                hideTypingIndicator();
                 addMessage('Error: ' + error.message, 'bot');
             }
+        }
+
+        function showTypingIndicator() {
+            const messages = document.getElementById('chat-messages');
+            const indicator = document.createElement('div');
+            indicator.className = 'message bot typing-indicator';
+            indicator.id = 'typing-indicator';
+            indicator.innerHTML = '<span></span><span></span><span></span>';
+            messages.appendChild(indicator);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
         }
 
         async function clearChat() {
