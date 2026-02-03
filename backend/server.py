@@ -11,6 +11,10 @@ from dotenv import load_dotenv
 from google import genai
 from typing import Dict, Any
 import pandas as pd
+from datetime import datetime, timedelta
+from jose import JWTError, jwt
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import Depends
 
 # Local imports
 import database as db
@@ -28,6 +32,41 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Auth Configuration
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-12345") # In production, use a strong random secret
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 # 24 hours
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+        
+    user = db.get_user_by_username(username)
+    if user is None:
+        raise credentials_exception
+    return user
+
 
 def get_client():
     """Get the Gemini client, ensuring the API key is read from the environment."""
@@ -58,6 +97,12 @@ class ChatRequest(BaseModel):
 class DashboardRename(BaseModel):
     name: str
 
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    full_name: str
+    is_admin: bool = False
+
 
 class QuickBooksFinalizeRequest(BaseModel):
     raw_ai_result: Dict[str, Any]
@@ -70,6 +115,12 @@ class QuickBooksFinalizeRequest(BaseModel):
 async def root():
     """Serve the homepage."""
     return FileResponse(os.path.join(FRONTEND_DIR, "home.html"))
+
+
+@app.get("/login")
+async def login_page():
+    """Serve the login page."""
+    return FileResponse(os.path.join(FRONTEND_DIR, "login.html"))
 
 
 @app.get("/dashboard")
@@ -100,17 +151,106 @@ async def global_exception_handler(request, exc):
 from fastapi.responses import JSONResponse
 
 
+# ============= Auth API Endpoints =============
+
+@app.post("/api/auth/token")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    """Authenticate user and return JWT token."""
+    user = db.get_user_by_username(form_data.username)
+    if not user or not db.verify_password(form_data.password, user['password_hash']):
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    access_token = create_access_token(data={"sub": user['username']})
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "user": {
+            "username": user['username'],
+            "full_name": user['full_name'],
+            "is_admin": bool(user['is_admin'])
+        }
+    }
+
+
+@app.get("/api/auth/me")
+async def read_users_me(current_user: dict = Depends(get_current_user)):
+    """Get current user information."""
+    return {
+        "username": current_user['username'],
+        "full_name": current_user['full_name'],
+        "is_admin": bool(current_user['is_admin'])
+    }
+
+
+# ============= Admin User Management Endpoints =============
+
+@app.get("/api/admin/users")
+async def list_users(current_user: dict = Depends(get_current_user)):
+    """List all users (admin only)."""
+    if not current_user['is_admin']:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    users = db.get_all_users()
+    return {"users": users}
+
+
+@app.post("/api/admin/users")
+async def create_new_user(user: UserCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new user (admin only)."""
+    if not current_user['is_admin']:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    user_id = db.create_user(
+        username=user.username,
+        password=user.password,
+        full_name=user.full_name,
+        is_admin=user.is_admin
+    )
+    
+    if user_id == -1:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    
+    return {"id": user_id, "message": "User created successfully"}
+
+
+@app.delete("/api/admin/users/{user_id}")
+async def delete_user(user_id: int, current_user: dict = Depends(get_current_user)):
+    """Delete a user (admin only)."""
+    if not current_user['is_admin']:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Optional: Prevent self-deletion
+    if user_id == current_user['id']:
+        raise HTTPException(status_code=400, detail="Cannot delete your own account")
+        
+    success = db.delete_user(user_id)
+    if not success:
+        raise HTTPException(status_code=44, detail="User not found")
+        
+    return {"message": "User deleted successfully"}
+
+
 # ============= Dashboard API Endpoints =============
 
 @app.get("/api/dashboards")
-async def list_dashboards():
-    """Get all dashboards."""
-    dashboards = db.get_all_dashboards()
+async def list_dashboards(current_user: dict = Depends(get_current_user)):
+    """Get all dashboards (filtered by user or all for admin)."""
+    dashboards = db.get_all_dashboards(
+        user_id=current_user['id'], 
+        is_admin=bool(current_user['is_admin'])
+    )
     return {"dashboards": dashboards}
 
 
 @app.post("/api/dashboards")
-async def create_dashboard(file: UploadFile = File(...)):
+async def create_dashboard(
+    file: UploadFile = File(...), 
+    current_user: dict = Depends(get_current_user)
+):
     """Upload an Excel/CSV/PDF file and create a new dashboard."""
     
     # Validate file type
@@ -171,7 +311,7 @@ async def create_dashboard(file: UploadFile = File(...)):
             name = company_name if company_name != "Unknown Company" else db.get_next_untitled_name()
             
             # Save to database
-            dashboard_id = db.create_dashboard(name, data)
+            dashboard_id = db.create_dashboard(name, data, current_user['id'])
             
             return {
                 "id": dashboard_id,
@@ -199,7 +339,7 @@ async def create_dashboard(file: UploadFile = File(...)):
         name = db.get_next_untitled_name()
         
         # Save to database
-        dashboard_id = db.create_dashboard(name, data)
+        dashboard_id = db.create_dashboard(name, data, current_user['id'])
         
         return {
             "id": dashboard_id,
@@ -215,53 +355,80 @@ async def create_dashboard(file: UploadFile = File(...)):
 
 
 @app.get("/api/dashboards/{dashboard_id}")
-async def get_dashboard(dashboard_id: int):
+async def get_dashboard(dashboard_id: int, current_user: dict = Depends(get_current_user)):
     """Get a single dashboard with its data."""
     dashboard = db.get_dashboard(dashboard_id)
     if not dashboard:
         raise HTTPException(status_code=404, detail="Dashboard not found")
+    
+    # Check permissions
+    if not current_user['is_admin'] and dashboard.get('user_id') != current_user['id']:
+        raise HTTPException(status_code=403, detail="Not authorized to access this dashboard")
+        
     return dashboard
 
 
 @app.put("/api/dashboards/{dashboard_id}")
-async def rename_dashboard(dashboard_id: int, body: DashboardRename):
+async def rename_dashboard(
+    dashboard_id: int, 
+    body: DashboardRename,
+    current_user: dict = Depends(get_current_user)
+):
     """Rename a dashboard."""
-    success = db.update_dashboard_name(dashboard_id, body.name)
-    if not success:
+    # Verify ownership or admin
+    dashboard = db.get_dashboard(dashboard_id)
+    if not dashboard:
         raise HTTPException(status_code=404, detail="Dashboard not found")
+        
+    if not current_user['is_admin'] and dashboard.get('user_id') != current_user['id']:
+        raise HTTPException(status_code=403, detail="Not authorized to rename this dashboard")
+        
+    success = db.update_dashboard_name(dashboard_id, body.name)
     return {"message": "Dashboard renamed successfully"}
 
 
 @app.delete("/api/dashboards/{dashboard_id}")
-async def delete_dashboard(dashboard_id: int):
+async def delete_dashboard(dashboard_id: int, current_user: dict = Depends(get_current_user)):
     """Delete a dashboard."""
-    success = db.delete_dashboard(dashboard_id)
-    if not success:
+    # Verify ownership or admin
+    dashboard = db.get_dashboard(dashboard_id)
+    if not dashboard:
         raise HTTPException(status_code=404, detail="Dashboard not found")
+        
+    if not current_user['is_admin'] and dashboard.get('user_id') != current_user['id']:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this dashboard")
+        
+    success = db.delete_dashboard(dashboard_id)
     return {"message": "Dashboard deleted successfully"}
 
 
 # ============= Conversation API Endpoints =============
 
 @app.get("/api/dashboards/{dashboard_id}/conversations")
-async def get_conversations(dashboard_id: int):
+async def get_conversations(dashboard_id: int, current_user: dict = Depends(get_current_user)):
     """Get all conversations for a dashboard."""
-    # Verify dashboard exists
+    # Verify access
     dashboard = db.get_dashboard(dashboard_id)
     if not dashboard:
         raise HTTPException(status_code=404, detail="Dashboard not found")
+    
+    if not current_user['is_admin'] and dashboard.get('user_id') != current_user['id']:
+        raise HTTPException(status_code=403, detail="Not authorized to access these conversations")
     
     conversations = db.get_conversations(dashboard_id)
     return {"conversations": conversations}
 
 
 @app.delete("/api/dashboards/{dashboard_id}/conversations")
-async def clear_conversations(dashboard_id: int):
+async def clear_conversations(dashboard_id: int, current_user: dict = Depends(get_current_user)):
     """Clear all conversations for a dashboard."""
-    # Verify dashboard exists
+    # Verify access
     dashboard = db.get_dashboard(dashboard_id)
     if not dashboard:
         raise HTTPException(status_code=404, detail="Dashboard not found")
+    
+    if not current_user['is_admin'] and dashboard.get('user_id') != current_user['id']:
+        raise HTTPException(status_code=403, detail="Not authorized to clear these conversations")
     
     db.clear_conversations(dashboard_id)
     return {"message": "Conversations cleared"}
@@ -270,7 +437,7 @@ async def clear_conversations(dashboard_id: int):
 # ============= Chat Endpoint =============
 
 @app.post("/chat")
-async def chat(request: ChatRequest):
+async def chat(request: ChatRequest, current_user: dict = Depends(get_current_user)):
     """Handle chat messages and save to database."""
     global client
     if not client:
@@ -346,7 +513,7 @@ class AnalyzeRequest(BaseModel):
 
 
 @app.post("/analyze")
-async def analyze(request: AnalyzeRequest):
+async def analyze(request: AnalyzeRequest, current_user: dict = Depends(get_current_user)):
     """Generate AI analysis and recommendations for the dashboard data."""
     global client
     if not client:

@@ -8,6 +8,10 @@ import json
 import os
 from datetime import datetime
 from typing import Optional, List, Dict, Any
+from passlib.context import CryptContext
+
+# Password hashing configuration
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 # Database file path support for Render Persistent Disks
 DATA_DIR_PATH = os.getenv("PERSISTENT_DATA_DIR")
@@ -39,16 +43,43 @@ def init_db():
     conn = get_connection()
     cursor = conn.cursor()
     
-    # Create dashboards table
+    # Create users table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            full_name TEXT NOT NULL,
+            is_admin BOOLEAN DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    
+    # Create dashboards table - with user_id
+    # Note: SQLite doesn't support adding FK constraints to existing tables easily, 
+    # but since this is an IF NOT EXISTS, we'll define it correctly.
+    # If it already exists, we might need a migration if we were in production,
+    # but for this dev setup we'll just ensure the column exists.
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS dashboards (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
             name TEXT DEFAULT 'Untitled',
             data TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
     """)
+    
+    # Check if user_id column exists (simple migration)
+    cursor.execute("PRAGMA table_info(dashboards)")
+    columns = [row['name'] for row in cursor.fetchall()]
+    if 'user_id' not in columns:
+        cursor.execute("ALTER TABLE dashboards ADD COLUMN user_id INTEGER REFERENCES users(id) ON DELETE CASCADE")
+    
+    # Ensure existing dashboards have an owner (admin = ID 1)
+    cursor.execute("UPDATE dashboards SET user_id = 1 WHERE user_id IS NULL")
     
     # Create conversations table
     cursor.execute("""
@@ -64,18 +95,21 @@ def init_db():
     
     conn.commit()
     conn.close()
+    
+    # Initialize default users
+    init_default_users()
 
 
 # ============= Dashboard Operations =============
 
-def create_dashboard(name: str, data: Dict[str, Any]) -> int:
+def create_dashboard(name: str, data: Dict[str, Any], user_id: int) -> int:
     """Create a new dashboard and return its ID."""
     conn = get_connection()
     cursor = conn.cursor()
     
     cursor.execute(
-        "INSERT INTO dashboards (name, data) VALUES (?, ?)",
-        (name, json.dumps(data))
+        "INSERT INTO dashboards (name, data, user_id) VALUES (?, ?, ?)",
+        (name, json.dumps(data), user_id)
     )
     
     dashboard_id = cursor.lastrowid
@@ -85,16 +119,25 @@ def create_dashboard(name: str, data: Dict[str, Any]) -> int:
     return dashboard_id
 
 
-def get_all_dashboards() -> List[Dict[str, Any]]:
-    """Get all dashboards (without full data for listing)."""
+def get_all_dashboards(user_id: int, is_admin: bool = False) -> List[Dict[str, Any]]:
+    """Get all dashboards for a user (Admin sees all)."""
     conn = get_connection()
     cursor = conn.cursor()
     
-    cursor.execute("""
-        SELECT id, name, created_at, updated_at 
-        FROM dashboards 
-        ORDER BY updated_at DESC
-    """)
+    if is_admin:
+        cursor.execute("""
+            SELECT d.id, d.name, d.created_at, d.updated_at, u.username as owner
+            FROM dashboards d
+            JOIN users u ON d.user_id = u.id
+            ORDER BY d.updated_at DESC
+        """)
+    else:
+        cursor.execute("""
+            SELECT id, name, created_at, updated_at 
+            FROM dashboards 
+            WHERE user_id = ?
+            ORDER BY updated_at DESC
+        """, (user_id,))
     
     rows = cursor.fetchall()
     conn.close()
@@ -146,6 +189,30 @@ def delete_dashboard(dashboard_id: int) -> bool:
     conn.commit()
     conn.close()
     
+    return success
+
+
+# ============= User Management Operations =============
+
+def get_all_users() -> List[Dict[str, Any]]:
+    """Retrieve all users in the system."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, username, full_name, is_admin, created_at FROM users ORDER BY created_at DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
+def delete_user(user_id: int) -> bool:
+    """Delete a user and all their dashboards."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    # Cascading delete is handled by foreign key in database schema
+    cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    success = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
     return success
 
 
@@ -214,6 +281,57 @@ def clear_conversations(dashboard_id: int) -> bool:
     conn.close()
     
     return True
+
+
+# ============= User Operations =============
+
+def get_hash(password: str) -> str:
+    """Hash a password."""
+    return pwd_context.hash(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a password against a hash."""
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def create_user(username: str, password: str, full_name: str, is_admin: bool = False) -> int:
+    """Create a new user."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    password_hash = get_hash(password)
+    try:
+        cursor.execute(
+            "INSERT INTO users (username, password_hash, full_name, is_admin) VALUES (?, ?, ?, ?)",
+            (username, password_hash, full_name, 1 if is_admin else 0)
+        )
+        user_id = cursor.lastrowid
+        conn.commit()
+    except sqlite3.IntegrityError:
+        user_id = -1
+    finally:
+        conn.close()
+        
+    return user_id
+
+
+def get_user_by_username(username: str) -> Optional[Dict[str, Any]]:
+    """Get a user by username."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+    row = cursor.fetchone()
+    conn.close()
+    
+    return dict(row) if row else None
+
+
+def init_default_users():
+    """Create default admin and user accounts if they don't exist."""
+    if not get_user_by_username("admin"):
+        create_user("admin", "password123", "System Administrator", is_admin=True)
 
 
 # Initialize database on module import

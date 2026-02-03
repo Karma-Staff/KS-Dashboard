@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+    <script>
+        // Auth check - must run before page renders
+        (function () {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restor Dashboard</title>
@@ -182,6 +191,53 @@
             display: flex;
             align-items: center;
             gap: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 16px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            margin-right: 8px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: var(--accent-danger);
+            color: white;
+            border-color: var(--accent-danger);
         }
 
         .dashboard-name {
@@ -916,7 +972,13 @@
                 </div>
             </div>
             <div class="nav-right">
-                <span class="dashboard-name" id="dashboard-name"></span>
+                <div class="user-info" id="user-display">
+                    <div class="user-avatar" id="user-avatar">?</div>
+                    <span class="user-name" id="user-name">Loading...</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+                <div style="width: 1px; height: 24px; background: var(--border-color); margin: 0 8px;"></div>
+                <span class="dashboard-name" id="dashboard-name-display">Loading...</span>
                 <button id="chat-toggle" onclick="toggleChat()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1156,11 +1218,20 @@
     </div>
 
     <script>
+        const API_BASE = ''; // Assuming API is on the same origin, adjust if needed
+
+        // Auth check
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login';
+        }
+
         // Dashboard state
         let dashboardId = null;
         let dashboardData = null;
         let expenseChart = null;
         let monthlyChart = null;
+        let currentBranch = 'Overall'; // Track selected branch for analysis context
 
         // Theme Management
         function initTheme() {
@@ -1187,21 +1258,27 @@
         async function fetchAnalysis() {
             const contentDiv = document.getElementById('analysis-content');
             contentDiv.innerHTML = `
-                <div class="analysis-loading">
+                <div class="analysis-loading" id="analysis-loading">
                     <div class="analysis-spinner"></div>
                     <div>Generating insights...</div>
                 </div>
             `;
 
             try {
-                const response = await fetch('/analyze', {
+                const response = await fetch(`${API_BASE}/analyze`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
                     body: JSON.stringify({
-                        dashboard_id: parseInt(dashboardId),
-                        context: dashboardData
+                        dashboard_id: dashboardData.id,
+                        context: dashboardData,
+                        branch: currentBranch
                     })
                 });
+
+                if (response.status === 401) return logout();
                 const data = await response.json();
                 contentDiv.innerHTML = data.analysis || 'Unable to generate analysis at this time.';
             } catch (error) {
@@ -1233,6 +1310,20 @@
             return params.get('id');
         }
 
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        function initUser() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                document.getElementById('user-name').innerText = user.full_name;
+                document.getElementById('user-avatar').innerText = user.full_name[0].toUpperCase();
+            }
+        }
+
         // Initialize dashboard
         async function initDashboard() {
             dashboardId = getDashboardId();
@@ -1243,17 +1334,23 @@
             }
 
             try {
-                const response = await fetch(`/api/dashboards/${dashboardId}`);
+                const response = await fetch(`${API_BASE}/api/dashboards/${dashboardId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (response.status === 401) return logout();
                 if (!response.ok) throw new Error('Dashboard not found');
 
                 const dashboard = await response.json();
                 dashboardData = dashboard.data;
+                dashboardData.id = dashboard.id; // Store dashboard ID in data for AI context
 
-                document.getElementById('dashboard-name').textContent = dashboard.name;
+                document.getElementById('dashboard-name-display').textContent = dashboard.name;
                 document.title = `${dashboard.name} - Restor Dashboard`;
 
                 populateFilters();
-                await loadConversations();
+                await loadChatHistory(); // Changed from loadConversations
                 updateDashboard();
 
                 document.getElementById('loading-overlay').style.display = 'none';
@@ -1290,6 +1387,8 @@
             const selectedBranch = document.getElementById('companyFilter').value;
             const startPeriod = document.getElementById('startPeriod').value;
             const endPeriod = document.getElementById('endPeriod').value;
+
+            currentBranch = selectedBranch; // Update currentBranch for analysis context
 
             const monthlyData = selectedBranch === 'Overall'
                 ? dashboardData.overall.monthly_details
@@ -1501,17 +1600,26 @@
             container.classList.toggle('open');
         }
 
-        async function loadConversations() {
+        async function loadChatHistory() {
             try {
-                const response = await fetch(`/api/dashboards/${dashboardId}/conversations`);
+                const response = await fetch(`${API_BASE}/api/dashboards/${dashboardId}/conversations`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (response.status === 401) return logout();
                 const data = await response.json();
 
-                data.conversations.forEach(conv => {
-                    addMessage(conv.user_message, 'user', false);
-                    addMessage(conv.ai_response, 'bot', false);
-                });
+                if (data.conversations && data.conversations.length > 0) {
+                    document.getElementById('chat-messages').innerHTML = ''; // Clear initial bot message
+                    data.conversations.forEach(conv => {
+                        addMessage(conv.user_message, 'user', false);
+                        addMessage(conv.ai_response, 'bot', false);
+                    });
+                    document.getElementById('chat-suggestions').style.display = 'none';
+                }
             } catch (error) {
-                console.error('Error loading conversations:', error);
+                console.error('Error loading chat history:', error);
             }
         }
 
@@ -1528,15 +1636,20 @@
             showTypingIndicator();
 
             try {
-                const response = await fetch('/chat', {
+                const response = await fetch(`${API_BASE}/chat`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
                     body: JSON.stringify({
                         message: message,
-                        dashboard_id: parseInt(dashboardId),
+                        dashboard_id: dashboardData.id,
                         context: dashboardData
                     })
                 });
+
+                if (response.status === 401) return logout();
                 const data = await response.json();
                 hideTypingIndicator();
                 addMessage(data.reply || data.detail || 'Error communicating with Restor AI', 'bot');
@@ -1565,7 +1678,14 @@
             if (!confirm('Clear all conversation history?')) return;
 
             try {
-                await fetch(`/api/dashboards/${dashboardId}/conversations`, { method: 'DELETE' });
+                const response = await fetch(`${API_BASE}/api/dashboards/${dashboardId}/conversations`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (response.status === 401) return logout();
+
                 document.getElementById('chat-messages').innerHTML = '<div class="message bot">Hello! I\'m Restor AI, your restoration business analyst. Ask me anything about your financial data.</div>';
                 document.getElementById('chat-suggestions').style.display = 'flex';
             } catch (error) {
