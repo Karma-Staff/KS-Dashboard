@@ -78,6 +78,9 @@ def init_db():
     if 'user_id' not in columns:
         cursor.execute("ALTER TABLE dashboards ADD COLUMN user_id INTEGER REFERENCES users(id) ON DELETE CASCADE")
     
+    # Initialize default users (needed for the update below)
+    init_default_users()
+    
     # Ensure existing dashboards have an owner (admin = ID 1)
     cursor.execute("UPDATE dashboards SET user_id = 1 WHERE user_id IS NULL")
     
@@ -95,9 +98,6 @@ def init_db():
     
     conn.commit()
     conn.close()
-    
-    # Initialize default users
-    init_default_users()
 
 
 # ============= Dashboard Operations =============
