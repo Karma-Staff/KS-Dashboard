@@ -287,7 +287,7 @@
         /* ============= Stat Cards ============= */
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 16px;
             margin-bottom: 32px;
         }
@@ -297,6 +297,18 @@
             padding: 20px;
             border-radius: 14px;
             border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .stat-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: var(--bg-tertiary);
         }
 
         .stat-label {
@@ -495,29 +507,36 @@
 
         /* ============= Restor AI Chatbot ============= */
         #chat-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(135deg, var(--accent-primary), #5856d6);
             color: white;
             border: none;
             cursor: pointer;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.875rem;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
             transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
         }
 
         #chat-toggle:hover {
-            transform: scale(1.02);
-            box-shadow: var(--shadow-md);
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
         }
 
         #chat-toggle svg {
-            width: 18px;
-            height: 18px;
+            width: 28px;
+            height: 28px;
+        }
+
+        #chat-toggle span {
+            display: none;
         }
 
         #chat-container {
@@ -731,6 +750,32 @@
             background: var(--accent-primary-hover);
         }
 
+        .chat-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .suggestion-chip {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .suggestion-chip:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
         /* ============= Analysis Section ============= */
         .analysis-section {
             background: var(--bg-card);
@@ -875,7 +920,7 @@
                 <button id="chat-toggle" onclick="toggleChat()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                     </svg>
                     <span>Restor AI</span>
                 </button>
@@ -932,7 +977,12 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Net Profit</div>
+                <div id="cardProfitBadge" class="stat-badge" style="display: none;"></div>
                 <div class="stat-value" id="cardProfit">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Margin</div>
+                <div class="stat-value" id="cardMargin">0%</div>
             </div>
         </div>
 
@@ -951,6 +1001,7 @@
                             <tr>
                                 <th>Account</th>
                                 <th>Amount</th>
+                                <th>Percentage</th>
                             </tr>
                         </thead>
                         <tbody id="expenseTableBody"></tbody>
@@ -1089,6 +1140,13 @@
         <div id="chat-messages">
             <div class="message bot">Hello! I'm Restor AI, your restoration business analyst. Ask me anything about your
                 financial data.</div>
+        </div>
+        <div class="chat-suggestions" id="chat-suggestions">
+            <div class="suggestion-chip" onclick="sendSuggestion('Show me a summary')">Summary</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('How can I cut expenses?')">Cut Expenses</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('What is my best performing branch?')">Best Branch
+            </div>
+            <div class="suggestion-chip" onclick="sendSuggestion('Analyze my profit margins')">Analyze Margins</div>
         </div>
         <div class="chat-input-area">
             <input type="text" id="chat-input" placeholder="Ask Restor AI..."
@@ -1265,9 +1323,19 @@
             document.getElementById('cardCOGS').innerText = formatCurrency(totalCOGS);
             document.getElementById('cardExpenses').innerText = formatCurrency(totalExpenses);
 
+            const margin = totalRevenue ? ((totalProfit / totalRevenue) * 100).toFixed(1) : 0;
+            const cardMargin = document.getElementById('cardMargin');
+            cardMargin.innerText = margin + '%';
+            cardMargin.className = 'stat-value ' + (margin > 20 ? 'profit-positive' : 'profit-negative');
+
             const profitEl = document.getElementById('cardProfit');
             profitEl.innerText = formatCurrency(totalProfit);
             profitEl.className = 'stat-value ' + (totalProfit >= 0 ? 'profit-positive' : 'profit-negative');
+
+            const profitBadge = document.getElementById('cardProfitBadge');
+            profitBadge.innerText = margin + '%';
+            profitBadge.style.display = 'block';
+            profitBadge.style.color = margin > 20 ? 'var(--accent-success)' : 'var(--accent-danger)';
 
             if (filteredMonths.length > 0) {
                 const best = filteredMonths.reduce((prev, curr) => (prev.profit > curr.profit) ? prev : curr);
@@ -1371,8 +1439,10 @@
 
             const sorted = Object.entries(expenses).sort((a, b) => b[1] - a[1]);
 
+            const totalExp = Object.values(expenses).reduce((a, b) => a + b, 0);
             sorted.forEach(([account, amount]) => {
-                tbody.innerHTML += `<tr><td style="color: var(--text-primary)">${account}</td><td>${formatCurrency(amount)}</td></tr>`;
+                const perc = totalExp ? ((amount / totalExp) * 100).toFixed(1) : 0;
+                tbody.innerHTML += `<tr><td style="color: var(--text-primary)">${account}</td><td>${formatCurrency(amount)}</td><td>${perc}%</td></tr>`;
             });
 
             if (sorted.length === 0) {
@@ -1452,6 +1522,7 @@
 
             addMessage(message, 'user');
             input.value = '';
+            document.getElementById('chat-suggestions').style.display = 'none';
 
             // Show typing indicator
             showTypingIndicator();
@@ -1496,6 +1567,7 @@
             try {
                 await fetch(`/api/dashboards/${dashboardId}/conversations`, { method: 'DELETE' });
                 document.getElementById('chat-messages').innerHTML = '<div class="message bot">Hello! I\'m Restor AI, your restoration business analyst. Ask me anything about your financial data.</div>';
+                document.getElementById('chat-suggestions').style.display = 'flex';
             } catch (error) {
                 console.error('Error clearing chat:', error);
             }
@@ -1508,6 +1580,11 @@
             div.innerText = text;
             messages.appendChild(div);
             if (scroll) messages.scrollTop = messages.scrollHeight;
+        }
+
+        function sendSuggestion(text) {
+            document.getElementById('chat-input').value = text;
+            sendMessage();
         }
 
         // Initialize
