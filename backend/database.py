@@ -126,17 +126,18 @@ def get_all_dashboards(user_id: int, is_admin: bool = False) -> List[Dict[str, A
     
     if is_admin:
         cursor.execute("""
-            SELECT d.id, d.name, d.created_at, d.updated_at, u.username as owner
+            SELECT d.id, d.name, d.created_at, d.updated_at, u.full_name as owner_name
             FROM dashboards d
             JOIN users u ON d.user_id = u.id
             ORDER BY d.updated_at DESC
         """)
     else:
         cursor.execute("""
-            SELECT id, name, created_at, updated_at 
-            FROM dashboards 
-            WHERE user_id = ?
-            ORDER BY updated_at DESC
+            SELECT d.id, d.name, d.created_at, d.updated_at, u.full_name as owner_name
+            FROM dashboards d
+            JOIN users u ON d.user_id = u.id
+            WHERE d.user_id = ?
+            ORDER BY d.updated_at DESC
         """, (user_id,))
     
     rows = cursor.fetchall()
@@ -150,7 +151,12 @@ def get_dashboard(dashboard_id: int) -> Optional[Dict[str, Any]]:
     conn = get_connection()
     cursor = conn.cursor()
     
-    cursor.execute("SELECT * FROM dashboards WHERE id = ?", (dashboard_id,))
+    cursor.execute("""
+        SELECT d.*, u.full_name as owner_name 
+        FROM dashboards d 
+        JOIN users u ON d.user_id = u.id 
+        WHERE d.id = ?
+    """, (dashboard_id,))
     row = cursor.fetchone()
     conn.close()
     
