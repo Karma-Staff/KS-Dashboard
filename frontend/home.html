@@ -796,9 +796,18 @@
                 </table>
             </div>
         </div>
+    </div> <!-- Delete Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal">
+            <h3>Delete Dashboard?</h3>
+            <p>This will permanently delete this dashboard and all conversation history. This action cannot be undone.
+            </p>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="modal-btn delete" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
     </div>
-
-
 
     <script>
         const API_BASE = '';
