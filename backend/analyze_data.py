@@ -2,9 +2,21 @@ import pandas as pd
 import json
 import os
 
-def analyze_data(csv_path):
-    # Load the data
-    df = pd.read_csv(csv_path)
+def analyze_data(csv_path=None, df=None):
+    """
+    Analyze financial data from either a CSV file path or a DataFrame.
+    
+    Args:
+        csv_path: Path to CSV file (optional if df is provided)
+        df: Pandas DataFrame (optional if csv_path is provided)
+    
+    Returns:
+        dict: Processed dashboard data with branches, periods, overall, and company_map
+    """
+    if df is None:
+        if csv_path is None:
+            raise ValueError("Either csv_path or df must be provided")
+        df = pd.read_csv(csv_path)
     
     # Standardize column names (in case of leading/trailing spaces)
     df.columns = [c.strip() for c in df.columns]

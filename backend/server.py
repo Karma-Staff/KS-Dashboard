@@ -2,14 +2,14 @@ import os
 import io
 # Version 3.0 - Multi-Dashboard System with SQLite
 import json
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, RedirectResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from google import genai
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 import pandas as pd
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
@@ -352,6 +352,111 @@ async def create_dashboard(
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
 
+
+async def process_file_to_dataframe(file: UploadFile) -> pd.DataFrame:
+    """
+    Process a single uploaded file (CSV, Excel, or QuickBooks PDF) into a DataFrame.
+    Returns a standardized DataFrame with columns: Company, Month, Year, Category, Account, Amount
+    """
+    filename = file.filename.lower()
+    content = await file.read()
+    
+    # Check if it's a QuickBooks file
+    is_quickbooks = False
+    if filename.endswith('.pdf'):
+        is_quickbooks = True
+    elif filename.endswith('.xlsx') or filename.endswith('.xls') or filename.endswith('.csv'):
+        try:
+            if filename.endswith('.csv'):
+                check_df = pd.read_csv(io.BytesIO(content), nrows=10, header=None)
+            else:
+                check_df = pd.read_excel(io.BytesIO(content), nrows=10, header=None)
+            
+            header_text = check_df.to_string().lower()
+            if "profit & loss" in header_text or "profit and loss" in header_text or \
+               ("income" in header_text and "expenses" in header_text) or \
+               ("revenue" in header_text and "expense" in header_text):
+                is_quickbooks = True
+        except:
+            pass
+    
+    if is_quickbooks:
+        from quickbooks_converter import convert_quickbooks_file
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="Gemini API Key not found")
+        df = convert_quickbooks_file(content, file.filename, api_key)
+    else:
+        if filename.endswith('.csv'):
+            df = pd.read_csv(io.BytesIO(content))
+        else:
+            df = pd.read_excel(io.BytesIO(content))
+    
+    return df
+
+
+@app.post("/api/dashboards/multi")
+async def create_consolidated_dashboard(
+    files: List[UploadFile] = File(...),
+    name: Optional[str] = Form(None),
+    current_user: dict = Depends(get_current_user)
+):
+    """Upload multiple files and merge them into a single consolidated dashboard."""
+    
+    if not files or len(files) == 0:
+        raise HTTPException(status_code=400, detail="No files provided")
+    
+    # Validate all file types
+    for file in files:
+        filename = file.filename.lower()
+        if not (filename.endswith('.xlsx') or filename.endswith('.xls') or 
+                filename.endswith('.csv') or filename.endswith('.pdf')):
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid file type: {file.filename}. Supported: .xlsx, .xls, .csv, .pdf"
+            )
+    
+    try:
+        all_dataframes = []
+        processed_files = []
+        
+        for file in files:
+            try:
+                df = await process_file_to_dataframe(file)
+                all_dataframes.append(df)
+                processed_files.append(file.filename)
+            except Exception as e:
+                raise HTTPException(
+                    status_code=400, 
+                    detail=f"Error processing {file.filename}: {str(e)}"
+                )
+        
+        # Merge all DataFrames
+        merged_df = pd.concat(all_dataframes, ignore_index=True)
+        
+        # Process merged data using analyze_data with DataFrame
+        data = analyze_data(df=merged_df)
+        
+        # Generate dashboard name if not provided
+        dashboard_name = name if name else f"Consolidated Dashboard ({len(files)} files)"
+        
+        # Save to database
+        dashboard_id = db.create_dashboard(dashboard_name, data, current_user['id'])
+        
+        return {
+            "id": dashboard_id,
+            "name": dashboard_name,
+            "files_merged": len(processed_files),
+            "files": processed_files,
+            "message": "Consolidated dashboard created successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Error creating consolidated dashboard: {str(e)}")
 
 
 @app.get("/api/dashboards/{dashboard_id}")

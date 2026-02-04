@@ -716,6 +716,15 @@
                             d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                 </button>
+                <button class="upload-btn" onclick="openMultiUploadModal()"
+                    title="Merge multiple files into one dashboard"
+                    style="background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color);">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    Merge Files
+                </button>
                 <button class="upload-btn" onclick="document.getElementById('file-input').click()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -815,10 +824,64 @@
         </div>
     </div>
 
+    <!-- Multi-File Upload Modal -->
+    <div class="modal-overlay" id="multi-upload-modal" style="display: none;">
+        <div class="modal" style="max-width: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin-bottom: 0;">Merge Files into Dashboard</h3>
+                <button class="action-btn" onclick="closeMultiUploadModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <p style="margin-bottom: 16px;">Select multiple files (Excel, CSV, or QuickBooks PDFs) to combine into a
+                single dashboard.</p>
+
+            <div id="multi-file-drop-zone"
+                style="border: 2px dashed var(--border-color); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; margin-bottom: 16px; transition: all 0.2s;"
+                onclick="document.getElementById('multi-file-input').click()"
+                ondragover="event.preventDefault(); this.style.borderColor='var(--accent-primary)'; this.style.background='rgba(0,113,227,0.05)';"
+                ondragleave="this.style.borderColor='var(--border-color)'; this.style.background='transparent';"
+                ondrop="handleMultiFileDrop(event)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    style="width: 48px; height: 48px; color: var(--text-tertiary); margin-bottom: 12px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <div style="color: var(--text-secondary); font-size: 0.9375rem;">Click or drag files here</div>
+                <div style="color: var(--text-tertiary); font-size: 0.8125rem; margin-top: 4px;">Supports .xlsx, .csv,
+                    .pdf</div>
+            </div>
+            <input type="file" id="multi-file-input" accept=".xlsx,.xls,.csv,.pdf" multiple
+                onchange="handleMultiFileSelect(event)" style="display: none;">
+
+            <div id="multi-file-list" style="max-height: 150px; overflow-y: auto; margin-bottom: 16px;"></div>
+
+            <div style="margin-bottom: 16px;">
+                <label
+                    style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Dashboard
+                    Name (optional)</label>
+                <input type="text" id="multi-dashboard-name" placeholder="Leave empty for auto-generated name"
+                    style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-tertiary); color: var(--text-primary); font-size: 0.9375rem;">
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeMultiUploadModal()">Cancel</button>
+                <button class="modal-btn" id="multi-upload-btn" onclick="submitMultiUpload()"
+                    style="background: var(--accent-primary); color: white;" disabled>
+                    Create Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_BASE = '';
         let dashboards = [];
         let dashboardToDelete = null;
+        let multiUploadFiles = [];
 
         // Theme Management
         function initTheme() {
@@ -1090,6 +1153,118 @@
             }
 
             event.target.value = '';
+        }
+
+        // Multi-file upload functions
+        function openMultiUploadModal() {
+            multiUploadFiles = [];
+            renderMultiFileList();
+            document.getElementById('multi-dashboard-name').value = '';
+            document.getElementById('multi-upload-modal').style.display = 'flex';
+        }
+
+        function closeMultiUploadModal() {
+            document.getElementById('multi-upload-modal').style.display = 'none';
+            multiUploadFiles = [];
+        }
+
+        function handleMultiFileSelect(event) {
+            const files = Array.from(event.target.files);
+            addFilesToMultiUpload(files);
+            event.target.value = '';
+        }
+
+        function handleMultiFileDrop(event) {
+            event.preventDefault();
+            event.currentTarget.style.borderColor = 'var(--border-color)';
+            event.currentTarget.style.background = 'transparent';
+
+            const files = Array.from(event.dataTransfer.files).filter(f => {
+                const name = f.name.toLowerCase();
+                return name.endsWith('.xlsx') || name.endsWith('.xls') || name.endsWith('.csv') || name.endsWith('.pdf');
+            });
+            addFilesToMultiUpload(files);
+        }
+
+        function addFilesToMultiUpload(files) {
+            files.forEach(file => {
+                // Avoid duplicates by name
+                if (!multiUploadFiles.find(f => f.name === file.name && f.size === file.size)) {
+                    multiUploadFiles.push(file);
+                }
+            });
+            renderMultiFileList();
+        }
+
+        function removeFileFromMultiUpload(index) {
+            multiUploadFiles.splice(index, 1);
+            renderMultiFileList();
+        }
+
+        function renderMultiFileList() {
+            const container = document.getElementById('multi-file-list');
+            const btn = document.getElementById('multi-upload-btn');
+
+            if (multiUploadFiles.length === 0) {
+                container.innerHTML = '';
+                btn.disabled = true;
+                return;
+            }
+
+            btn.disabled = false;
+            container.innerHTML = multiUploadFiles.map((file, index) => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 6px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 16px; height: 16px; color: var(--accent-success);">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span style="font-size: 0.875rem; color: var(--text-primary);">${file.name}</span>
+                        <span style="font-size: 0.75rem; color: var(--text-tertiary);">(${(file.size / 1024).toFixed(1)} KB)</span>
+                    </div>
+                    <button class="action-btn" onclick="removeFileFromMultiUpload(${index})" style="width: 24px; height: 24px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 14px; height: 14px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function submitMultiUpload() {
+            if (multiUploadFiles.length === 0) return;
+
+            const btn = document.getElementById('multi-upload-btn');
+            btn.disabled = true;
+            btn.innerHTML = 'Processing...';
+
+            const formData = new FormData();
+            multiUploadFiles.forEach(file => formData.append('files', file));
+
+            const name = document.getElementById('multi-dashboard-name').value.trim();
+            if (name) formData.append('name', name);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboards/multi`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Upload failed');
+                }
+
+                const data = await response.json();
+                closeMultiUploadModal();
+                window.location.href = `/dashboard?id=${data.id}`;
+            } catch (error) {
+                btn.disabled = false;
+                btn.innerHTML = 'Create Dashboard';
+                alert('Error: ' + error.message);
+            }
         }
 
         // Rename functions
