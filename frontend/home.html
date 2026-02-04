@@ -46,6 +46,9 @@
             /* Chart Colors */
             --chart-grid: rgba(0, 0, 0, 0.06);
             --chart-text: #6e6e73;
+
+            /* Logo */
+            --logo-filter: none;
         }
 
         /* ============= Dark Theme ============= */
@@ -78,6 +81,9 @@
             /* Chart Colors */
             --chart-grid: rgba(255, 255, 255, 0.1);
             --chart-text: #a1a1a6;
+
+            /* Logo - invert to white for dark mode */
+            --logo-filter: brightness(0) invert(1);
         }
 
         /* ============= Base Styles ============= */
@@ -1157,10 +1163,11 @@
         initUser();
         loadDashboards();
     </script>
-    <div
-        style="position: fixed; bottom: 10px; left: 10px; font-size: 0.625rem; color: var(--text-tertiary); opacity: 0.5; z-index: 1000;">
-        v3.1.0-qb-auto
-    </div>
+    <a href="https://karmastaff.com" target="_blank" rel="noopener noreferrer"
+        style="position: fixed; bottom: 15px; right: 15px; z-index: 1000; opacity: 0.7; transition: opacity 0.2s;"
+        onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+        <img src="/assets/karmastaff_logo.png" alt="Karma Staff" style="height: 32px; filter: var(--logo-filter);">
+    </a>
 </body>
 
 </html>
