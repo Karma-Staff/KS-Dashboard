@@ -1085,18 +1085,27 @@
 
         <div class="insights-grid">
             <div class="chart-container">
-                <h3>Monthly Profit Trend</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 0;">Monthly <span id="trendMetricLabel">Profit</span> Trend</h3>
+                    <select id="trendMetricSelector" onchange="updateTrendMetric()"
+                        style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); font-size: 14px; cursor: pointer;">
+                        <option value="profit">Net Profit</option>
+                        <option value="revenue">Revenue</option>
+                        <option value="cogs">COGS</option>
+                        <option value="expenses">Expenses</option>
+                    </select>
+                </div>
                 <div style="height: 260px;">
                     <canvas id="monthlyChart"></canvas>
                 </div>
             </div>
             <div class="stat-card insight-box">
                 <div class="insight-item">
-                    <div class="label">Best Performing Month</div>
+                    <div class="label" id="bestMonthLabel">Best Performing Month</div>
                     <div class="value profit-positive" id="bestMonthText">-</div>
                 </div>
                 <div class="insight-item">
-                    <div class="label">Lowest Performance</div>
+                    <div class="label" id="worstMonthLabel">Lowest Performance</div>
                     <div class="value profit-negative" id="worstMonthText">-</div>
                 </div>
             </div>
@@ -1573,23 +1582,72 @@
             }
         }
 
+        // Track current trend metric
+        let currentTrendMetric = 'profit';
+        let currentTrendData = [];
+
+        function updateTrendMetric() {
+            const selector = document.getElementById('trendMetricSelector');
+            currentTrendMetric = selector.value;
+
+            // Update label
+            const labelMap = {
+                'profit': 'Profit',
+                'revenue': 'Revenue',
+                'cogs': 'COGS',
+                'expenses': 'Expenses'
+            };
+            document.getElementById('trendMetricLabel').textContent = labelMap[currentTrendMetric];
+
+            // Re-render chart with current data
+            if (currentTrendData.length > 0) {
+                updateMonthlyChart(currentTrendData);
+            }
+        }
+
         function updateMonthlyChart(trends) {
+            currentTrendData = trends; // Store for metric switching
             const labels = trends.map(t => t.label);
-            const profits = trends.map(t => t.profit);
+            const metric = currentTrendMetric;
+            const values = trends.map(t => t[metric] || 0);
             const colors = getChartColors();
+
+            // For COGS and Expenses, higher values are "bad" (red), lower are "good" (green)
+            // For Profit and Revenue, higher values are "good" (green), lower are "bad" (red)
+            const isInverseMetric = (metric === 'cogs' || metric === 'expenses');
 
             if (monthlyChart) monthlyChart.destroy();
 
             const ctx = document.getElementById('monthlyChart').getContext('2d');
+
+            // Determine colors based on metric type
+            let bgColors, borderColors;
+            if (isInverseMetric) {
+                // For COGS/Expenses: all bars use a neutral/warning color (orange/amber)
+                bgColors = values.map(() => 'rgba(255, 149, 0, 0.2)');
+                borderColors = values.map(() => '#ff9500');
+            } else {
+                // For Profit/Revenue: green for positive, red for negative
+                bgColors = values.map(v => v >= 0 ? colors.profitBg : colors.lossBg);
+                borderColors = values.map(v => v >= 0 ? colors.profitBorder : colors.lossBorder);
+            }
+
+            const labelNames = {
+                'profit': 'Net Profit',
+                'revenue': 'Revenue',
+                'cogs': 'Cost of Goods Sold',
+                'expenses': 'Total Expenses'
+            };
+
             monthlyChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Net Profit',
-                        data: profits,
-                        backgroundColor: profits.map(v => v >= 0 ? colors.profitBg : colors.lossBg),
-                        borderColor: profits.map(v => v >= 0 ? colors.profitBorder : colors.lossBorder),
+                        label: labelNames[metric],
+                        data: values,
+                        backgroundColor: bgColors,
+                        borderColor: borderColors,
                         borderWidth: 1,
                         borderRadius: 4
                     }]
@@ -1616,6 +1674,57 @@
                     }
                 }
             });
+
+            // Update Best/Worst performing months
+            updateBestWorstMonths(trends, metric, isInverseMetric);
+        }
+
+        function updateBestWorstMonths(trends, metric, isInverseMetric) {
+            if (!trends || trends.length === 0) return;
+
+            // Filter out months with zero or undefined values
+            const validTrends = trends.filter(t => t[metric] && t[metric] !== 0);
+            if (validTrends.length === 0) {
+                document.getElementById('bestMonthText').textContent = '-';
+                document.getElementById('worstMonthText').textContent = '-';
+                return;
+            }
+
+            // Sort by metric value
+            const sorted = [...validTrends].sort((a, b) => b[metric] - a[metric]);
+
+            let bestMonth, worstMonth, bestLabel, worstLabel;
+
+            if (isInverseMetric) {
+                // For COGS/Expenses: lowest is best, highest is worst
+                bestMonth = sorted[sorted.length - 1];
+                worstMonth = sorted[0];
+                bestLabel = `Lowest ${metric === 'cogs' ? 'COGS' : 'Expenses'}`;
+                worstLabel = `Highest ${metric === 'cogs' ? 'COGS' : 'Expenses'}`;
+            } else {
+                // For Profit/Revenue: highest is best, lowest is worst
+                bestMonth = sorted[0];
+                worstMonth = sorted[sorted.length - 1];
+                bestLabel = 'Best Performing Month';
+                worstLabel = 'Lowest Performance';
+            }
+
+            // Update labels
+            document.getElementById('bestMonthLabel').textContent = bestLabel;
+            document.getElementById('worstMonthLabel').textContent = worstLabel;
+
+            // Update values
+            document.getElementById('bestMonthText').textContent =
+                `${bestMonth.label}: ${formatCurrency(bestMonth[metric])}`;
+            document.getElementById('worstMonthText').textContent =
+                `${worstMonth.label}: ${formatCurrency(worstMonth[metric])}`;
+
+            // Update color classes based on metric type
+            const bestEl = document.getElementById('bestMonthText');
+            const worstEl = document.getElementById('worstMonthText');
+
+            bestEl.className = 'value profit-positive';
+            worstEl.className = 'value profit-negative';
         }
 
         // Chat functions

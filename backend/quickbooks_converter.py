@@ -112,10 +112,13 @@ RULES FOR csv_data:
 2. Headers MUST be: Account|Category|Month|Amount
 3. Category MUST be exactly: "Income", "Cost of Goods Sold", or "Expenses"
 4. Month MUST be 3-letter abbreviation: Jan, Feb, etc.
-5. SKIP total rows, subtotal rows, percentages, and blank rows.
-6. Remove account codes like "4000 · " from account names.
-7. Include ALL months and ALL line items found.
-8. If the report has multiple months, create a separate line for each month/account combo.
+5. ONLY skip rows that are pure summary totals (e.g., "Total Income", "Net Income", "Gross Profit").
+6. PRESERVE all unique account line items, even if they have similar names.
+7. CRITICALLY: Do NOT merge or remove rows just because they have similar names (e.g., "TOTAL COST OF GOODS SOLD" and "Total TOTAL COST OF GOODS SOLD" are DIFFERENT accounts - keep BOTH).
+8. Remove account codes like "4000 · " from account names.
+9. Include ALL months and ALL line items found.
+10. If the report has multiple months, create a separate line for each month/account combo.
+11. Skip percentage rows and blank rows only.
 
 Here is the financial report to parse:
 

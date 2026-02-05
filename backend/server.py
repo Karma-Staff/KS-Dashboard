@@ -645,11 +645,26 @@ async def analyze(request: AnalyzeRequest, current_user: dict = Depends(get_curr
         2. **Key Observations**: 2-3 important findings from the data (trends, anomalies, opportunities).
         3. **Actionable Recommendations**: 2-3 specific, actionable steps the business owner can take to improve performance.
         
-        Rules for your response:
+        CRITICAL FORMATTING RULES:
+        - ALWAYS express costs/expenses as BOTH dollar amounts AND percentage of revenue.
+        - ALWAYS compare each metric against industry standards.
+        - Example format: "Trash expense is $200,000 (10% of revenue), which is above the industry standard of 8%."
+        
+        INDUSTRY BENCHMARKS FOR RESTORATION BUSINESSES:
+        - Net Profit Margin: 15-25% (healthy), <15% (needs improvement), >25% (excellent)
+        - COGS (Cost of Goods Sold): typically 30-40% of revenue
+        - Labor/Payroll: typically 20-30% of revenue
+        - Marketing/Advertising: typically 3-5% of revenue
+        - Administrative/Overhead: typically 8-12% of revenue
+        - Equipment/Supplies: typically 5-10% of revenue
+        - Insurance: typically 2-4% of revenue
+        - Rent/Utilities: typically 3-6% of revenue
+        
+        Additional Rules:
         - Be direct and specific. Reference actual numbers from the data.
+        - For every expense category, state: amount, percentage of revenue, and how it compares to industry standard.
         - Format dollar amounts as currency (e.g., $1,200.00).
-        - Keep the response concise but insightful - no more than 300 words.
-        - Use restoration industry benchmarks (15-25% net margin for healthy businesses).
+        - Keep the response concise but insightful - no more than 350 words.
         - Do not use markdown formatting like ** or headers. Use plain text with line breaks.
         - Separate sections with a blank line for readability.
         """
