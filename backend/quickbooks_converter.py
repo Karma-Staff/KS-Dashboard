@@ -111,13 +111,14 @@ RULES FOR csv_data:
 1. Use '|' (pipe) as the delimiter.
 2. Headers MUST be: Account|Category|LIST_OF_MONTHS_FOUND
 3. Category MUST be exactly: "Income", "Cost of Goods Sold", or "Expenses"
-4. ONLY skip rows that are pure summary totals (e.g., "Total Income", "Net Income", "Gross Profit").
-5. PRESERVE all unique account line items, even if they have similar names.
-6. CRITICALLY: Do NOT merge or remove rows just because they have similar names (e.g., "TOTAL COST OF GOODS SOLD" and "Total TOTAL COST OF GOODS SOLD" are DIFFERENT accounts - keep BOTH).
-7. Remove account codes like "4000 · " from account names.
-8. Include ALL months and ALL line items found. Use 0.00 for empty months.
-9. One row per account only, with amounts for all months in that same row.
-10. Skip percentage rows and blank rows only.
+4. CHRONOLOGICAL ORDER: Month columns in the CSV headers MUST follow the exact chronological order (Jan, Feb, Mar...) found in the report.
+5. SKIP SUMMARIES: Only extract individual line items. SKIP any rows that are "Total [Category]", "Total [Group]", "Net Income", or "Gross Profit". We only want the lowest-level account items.
+6. PRESERVE all unique account line items, even if they have similar names.
+7. CRITICALLY: Do NOT merge or remove rows just because they have similar names (e.g., "TOTAL COST OF GOODS SOLD" and "Total TOTAL COST OF GOODS SOLD" are DIFFERENT accounts - keep BOTH).
+8. Remove account codes like "4000 · " from account names.
+9. Include ALL months found. Use 0.00 for empty months or months with no data for that account.
+10. One row per account only, with amounts for all months in that same row.
+11. Skip percentage rows and blank rows only.
 
 Here is the financial report to parse:
 
@@ -173,11 +174,23 @@ Return ONLY the JSON object.
         if len(csv_lines) > 1:
             headers = [h.strip() for h in csv_lines[0].split('|')]
             
-            # Find which columns are months
+            # Robust month mapping
             month_indices = {}
             for i, h in enumerate(headers):
-                if h in MONTH_NAMES:
-                    month_indices[h] = i
+                h_clean = h.strip().rstrip('.').capitalize()
+                # Check for standard 3-letter codes
+                if h_clean in MONTH_NAMES:
+                    month_indices[h_clean] = i
+                # Check for full names
+                else:
+                    for std_m in MONTH_NAMES:
+                        if h_clean.startswith(std_m):
+                            month_indices[std_m] = i
+                            break
+                        # Handle Sept/Sep
+                        if std_m == 'Sep' and h_clean.startswith('Sept'):
+                            month_indices['Sep'] = i
+                            break
             
             for line in csv_lines[1:]:
                 parts = [p.strip() for p in line.split('|')]
@@ -191,9 +204,9 @@ Return ONLY the JSON object.
                             amt_str = parts[idx]
                             # Basic cleaning
                             try:
-                                # Clean amount string
+                                # Clean amount string - handle $ ( ) , and -
                                 amt_str = amt_str.replace(',', '').replace('$', '').replace('(', '-').replace(')', '').strip()
-                                if not amt_str or amt_str == '-':
+                                if not amt_str or amt_str == '-' or amt_str == '—':
                                     amount = 0.0
                                 else:
                                     amount = float(amt_str)
