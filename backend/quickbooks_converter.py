@@ -97,28 +97,27 @@ TASK: Convert this financial report to a structured format.
 OUTPUT FORMAT - Return a valid JSON object with this exact structure:
 {{
     "company_name": "Extracted Company Name",
-    "year": 2025,
+    "year": 2024,
     "detected_months": ["Jan", "Feb", "Mar", ...],
     "column_mapping": {{
         "Account": "Column 1",
         "Category": "Derived from sections",
-        "Amount": "Columns 2 onwards"
+        "Months": ["Jan", "Feb", ...]
     }},
-    "csv_data": "Account|Category|Month|Amount\\nMitigation Revenue|Income|Jan|1000.00\\n..."
+    "csv_data": "Account|Category|Jan|Feb|Mar|...\\nMitigation Revenue|Income|1000.00|2000.00|1500.00|..."
 }}
 
 RULES FOR csv_data:
 1. Use '|' (pipe) as the delimiter.
-2. Headers MUST be: Account|Category|Month|Amount
+2. Headers MUST be: Account|Category|LIST_OF_MONTHS_FOUND
 3. Category MUST be exactly: "Income", "Cost of Goods Sold", or "Expenses"
-4. Month MUST be 3-letter abbreviation: Jan, Feb, etc.
-5. ONLY skip rows that are pure summary totals (e.g., "Total Income", "Net Income", "Gross Profit").
-6. PRESERVE all unique account line items, even if they have similar names.
-7. CRITICALLY: Do NOT merge or remove rows just because they have similar names (e.g., "TOTAL COST OF GOODS SOLD" and "Total TOTAL COST OF GOODS SOLD" are DIFFERENT accounts - keep BOTH).
-8. Remove account codes like "4000 · " from account names.
-9. Include ALL months and ALL line items found.
-10. If the report has multiple months, create a separate line for each month/account combo.
-11. Skip percentage rows and blank rows only.
+4. ONLY skip rows that are pure summary totals (e.g., "Total Income", "Net Income", "Gross Profit").
+5. PRESERVE all unique account line items, even if they have similar names.
+6. CRITICALLY: Do NOT merge or remove rows just because they have similar names (e.g., "TOTAL COST OF GOODS SOLD" and "Total TOTAL COST OF GOODS SOLD" are DIFFERENT accounts - keep BOTH).
+7. Remove account codes like "4000 · " from account names.
+8. Include ALL months and ALL line items found. Use 0.00 for empty months.
+9. One row per account only, with amounts for all months in that same row.
+10. Skip percentage rows and blank rows only.
 
 Here is the financial report to parse:
 
@@ -167,25 +166,47 @@ Return ONLY the JSON object.
         else:
             raise ValueError(f"No JSON found in AI response: {e}")
             
-    # Convert csv_data string to list of dicts for backward compatibility
+    # Convert csv_data wide format to list of flat dicts
     if 'csv_data' in result:
         data_rows = []
         csv_lines = result['csv_data'].strip().split('\n')
         if len(csv_lines) > 1:
             headers = [h.strip() for h in csv_lines[0].split('|')]
+            
+            # Find which columns are months
+            month_indices = {}
+            for i, h in enumerate(headers):
+                if h in MONTH_NAMES:
+                    month_indices[h] = i
+            
             for line in csv_lines[1:]:
                 parts = [p.strip() for p in line.split('|')]
-                if len(parts) == len(headers):
-                    row = dict(zip(headers, parts))
-                    # Basic cleaning
-                    try:
-                        # Clean amount string
-                        amt_str = row['Amount'].replace(',', '').replace('$', '').replace('(', '-').replace(')', '').strip()
-                        row['Amount'] = float(amt_str)
-                        if row['Amount'] != 0:
-                            data_rows.append(row)
-                    except:
-                        continue
+                if len(parts) >= 3:
+                    account = parts[0]
+                    category = parts[1]
+                    
+                    # For each month column, create a flat row
+                    for month, idx in month_indices.items():
+                        if idx < len(parts):
+                            amt_str = parts[idx]
+                            # Basic cleaning
+                            try:
+                                # Clean amount string
+                                amt_str = amt_str.replace(',', '').replace('$', '').replace('(', '-').replace(')', '').strip()
+                                if not amt_str or amt_str == '-':
+                                    amount = 0.0
+                                else:
+                                    amount = float(amt_str)
+                                
+                                if amount != 0:
+                                    data_rows.append({
+                                        'Account': account,
+                                        'Category': category,
+                                        'Month': month,
+                                        'Amount': amount
+                                    })
+                            except:
+                                continue
         result['data'] = data_rows
         
         # Create a sample preview if not provided
