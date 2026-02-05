@@ -47,8 +47,6 @@
             --chart-grid: rgba(0, 0, 0, 0.06);
             --chart-text: #6e6e73;
 
-            /* Logo */
-            --logo-filter: none;
         }
 
         /* ============= Dark Theme ============= */
@@ -82,8 +80,6 @@
             --chart-grid: rgba(255, 255, 255, 0.1);
             --chart-text: #a1a1a6;
 
-            /* Logo - invert to white for dark mode */
-            --logo-filter: brightness(0) invert(1);
         }
 
         /* ============= Base Styles ============= */
@@ -738,21 +734,43 @@
                             d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                 </button>
-                <button class="upload-btn" onclick="openMultiUploadModal()"
-                    title="Merge multiple files into one dashboard"
-                    style="background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color);">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                    </svg>
-                    Merge Files
-                </button>
-                <button class="upload-btn" onclick="document.getElementById('file-input').click()">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    New Dashboard
-                </button>
+                <div class="dropdown" style="position: relative;">
+                    <button class="upload-btn" onclick="toggleNewDashboardDropdown(event)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        New Dashboard
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            style="width: 12px; height: 12px; margin-left: 4px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div id="new-dashboard-dropdown" class="dropdown-menu"
+                        style="display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-lg); min-width: 180px; z-index: 1000; overflow: hidden;">
+                        <button onclick="document.getElementById('file-input').click(); closeNewDashboardDropdown();"
+                            style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 16px; background: none; border: none; color: var(--text-primary); cursor: pointer; text-align: left; font-size: 14px; transition: background 0.2s;"
+                            onmouseover="this.style.background='var(--bg-tertiary)'"
+                            onmouseout="this.style.background='none'">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" style="width: 18px; height: 18px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Single Document
+                        </button>
+                        <button onclick="openMultiUploadModal(); closeNewDashboardDropdown();"
+                            style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 16px; background: none; border: none; color: var(--text-primary); cursor: pointer; text-align: left; font-size: 14px; transition: background 0.2s;"
+                            onmouseover="this.style.background='var(--bg-tertiary)'"
+                            onmouseout="this.style.background='none'">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" style="width: 18px; height: 18px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                            </svg>
+                            Multiple Files
+                        </button>
+                    </div>
+                </div>
                 <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.pdf" onchange="handleFileUpload(event)">
             </div>
         </header>
@@ -946,6 +964,25 @@
             localStorage.setItem('hasSeenSecurityPopupV2', 'true');
         }
 
+        // New Dashboard Dropdown
+        function toggleNewDashboardDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('new-dashboard-dropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function closeNewDashboardDropdown() {
+            document.getElementById('new-dashboard-dropdown').style.display = 'none';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const dropdown = document.getElementById('new-dashboard-dropdown');
+            if (dropdown && !event.target.closest('.dropdown')) {
+                dropdown.style.display = 'none';
+            }
+        });
+
         // Theme Management
         function initTheme() {
             const saved = localStorage.getItem('restor-theme');
@@ -954,6 +991,7 @@
             } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
+            updateLogo();
         }
 
         function toggleTheme() {
@@ -961,6 +999,14 @@
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('restor-theme', next);
+            updateLogo();
+        }
+
+        function updateLogo() {
+            const logo = document.getElementById('karmastaff-logo');
+            if (!logo) return;
+            const theme = document.documentElement.getAttribute('data-theme');
+            logo.src = theme === 'light' ? '/assets/logo_light_mode.png' : '/assets/logo_dark_mode.png';
         }
 
         // Format date
@@ -1424,11 +1470,9 @@
         loadDashboards();
         checkSecurityPopup();
     </script>
-    <a href="https://karmastaff.com" target="_blank" rel="noopener noreferrer"
-        style="position: fixed; bottom: 15px; right: 15px; z-index: 1000; opacity: 0.7; transition: opacity 0.2s;"
-        onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
-        <img src="/assets/karmastaff_logo.png" alt="Karma Staff" style="height: 32px; filter: var(--logo-filter);">
-    </a>
+    <div style="position: fixed; bottom: 15px; right: 15px; z-index: 1000; opacity: 0.7; pointer-events: none;">
+        <img id="karmastaff-logo" src="/assets/logo_dark_mode.png" alt="Karma Staff" style="height: 64px;">
+    </div>
 </body>
 
 </html>

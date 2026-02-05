@@ -52,8 +52,6 @@
             --chart-loss-bg: rgba(255, 59, 48, 0.2);
             --chart-loss-border: #ff3b30;
 
-            /* Logo */
-            --logo-filter: none;
         }
 
         /* ============= Dark Theme ============= */
@@ -91,8 +89,6 @@
             --chart-loss-bg: rgba(255, 69, 58, 0.25);
             --chart-loss-border: #ff453a;
 
-            /* Logo - invert to white for dark mode */
-            --logo-filter: brightness(0) invert(1);
         }
 
         /* ============= Base Styles ============= */
@@ -1259,6 +1255,7 @@
             } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
+            updateLogo();
         }
 
         function toggleTheme() {
@@ -1267,10 +1264,19 @@
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('restor-theme', next);
 
+            updateLogo();
+
             // Redraw charts with new theme colors
             if (dashboardData) {
                 updateDashboard();
             }
+        }
+
+        function updateLogo() {
+            const logo = document.getElementById('karmastaff-logo');
+            if (!logo) return;
+            const theme = document.documentElement.getAttribute('data-theme');
+            logo.src = theme === 'light' ? '/assets/logo_light_mode.png' : '/assets/logo_dark_mode.png';
         }
 
         async function fetchAnalysis() {
@@ -1730,11 +1736,9 @@
         initUser();
         initDashboard();
     </script>
-    <a href="https://karmastaff.com" target="_blank" rel="noopener noreferrer"
-        style="position: fixed; bottom: 15px; right: 15px; z-index: 1000; opacity: 0.7; transition: opacity 0.2s;"
-        onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
-        <img src="/assets/karmastaff_logo.png" alt="Karma Staff" style="height: 32px; filter: var(--logo-filter);">
-    </a>
+    <div style="position: fixed; bottom: 15px; right: 15px; z-index: 1000; opacity: 0.7; pointer-events: none;">
+        <img id="karmastaff-logo" src="/assets/logo_dark_mode.png" alt="Karma Staff" style="height: 64px;">
+    </div>
 </body>
 
 </html>

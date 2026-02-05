@@ -137,6 +137,8 @@ async def health_check():
 
 # Mount static files (CSS, JS, etc.)
 app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
+# Explicitly mount assets for logo and other media
+app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="assets")
 
 # Custom exception handler to ensure JSON responses on errors
 @app.exception_handler(Exception)
