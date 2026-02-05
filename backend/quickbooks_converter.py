@@ -112,13 +112,15 @@ RULES FOR csv_data:
 2. Headers MUST be: Account|Category|LIST_OF_MONTHS_FOUND
 3. Category MUST be exactly: "Income", "Cost of Goods Sold", or "Expenses"
 4. CHRONOLOGICAL ORDER: Month columns in the CSV headers MUST follow the exact chronological order (Jan, Feb, Mar...) found in the report.
-5. SKIP SUMMARIES: Only extract individual line items. SKIP any rows that are "Total [Category]", "Total [Group]", "Net Income", or "Gross Profit". We only want the lowest-level account items.
-6. PRESERVE all unique account line items, even if they have similar names.
-7. CRITICALLY: Do NOT merge or remove rows just because they have similar names (e.g., "TOTAL COST OF GOODS SOLD" and "Total TOTAL COST OF GOODS SOLD" are DIFFERENT accounts - keep BOTH).
-8. Remove account codes like "4000 · " from account names.
-9. Include ALL months found. Use 0.00 for empty months or months with no data for that account.
-10. One row per account only, with amounts for all months in that same row.
-11. Skip percentage rows and blank rows only.
+5. SKIP SUMMARIES: Skip ONLY the final category totals (e.g., "Total Income", "Total Cost of Goods Sold", "Total Expenses", "Gross Profit", "Net Income"). 
+6. SUB-TOTAL SKIPPING: Skip a row ONLY if its value is exactly the sum of sub-items *already extracted*. If a row has sub-items but it contains additional unique value not found in sub-items, KEEP IT.
+7. CRITICAL PRESERVATION: Account rows like "TOTAL COST OF GOODS SOLD" or "TOTAL LABOR" are often unique accounts in this report. If they contain data lines and are NOT the final category total, PRESERVE them.
+8. PRESERVE all unique account line items, even if they have similar names.
+9. CRITICALLY: Do NOT merge or remove rows just because they have similar names (e.g., "TOTAL COST OF GOODS SOLD" and "Total TOTAL COST OF GOODS SOLD" are DIFFERENT accounts - keep BOTH).
+10. Remove account codes like "4000 · " from account names.
+11. Include ALL months found. Use 0.00 for empty months or months with no data for that account.
+12. One row per account only, with amounts for all months in that same row.
+13. Skip percentage rows and blank rows only.
 
 Here is the financial report to parse:
 
