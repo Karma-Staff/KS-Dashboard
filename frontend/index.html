@@ -812,6 +812,15 @@
             background: var(--accent-primary-hover);
         }
 
+        .chat-disclaimer {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            padding: 8px 20px;
+            text-align: center;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+        }
+
         .chat-suggestions {
             display: flex;
             flex-wrap: wrap;
@@ -1220,6 +1229,9 @@
             <input type="text" id="chat-input" placeholder="Ask Restor AI..."
                 onkeypress="if(event.key === 'Enter') sendMessage()">
             <button id="chat-send" onclick="sendMessage()">Send</button>
+        </div>
+        <div class="chat-disclaimer">
+            Restor AI can make mistakes. Please verify important financial information.
         </div>
     </div>
 

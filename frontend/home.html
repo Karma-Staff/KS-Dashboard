@@ -613,6 +613,28 @@
             padding: 20px;
             margin-bottom: 24px;
             border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .cancel-upload-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .cancel-upload-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--accent-danger);
         }
 
         .upload-progress span {
@@ -736,6 +758,12 @@
         </header>
 
         <div class="upload-progress" id="upload-progress">
+            <button class="cancel-upload-btn" onclick="cancelUpload()" title="Cancel Upload">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    style="width: 18px; height: 18px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
             <span>Processing your file...</span>
             <div class="progress-bar">
                 <div class="progress-fill"></div>
@@ -877,11 +905,46 @@
         </div>
     </div>
 
+    <!-- Security Pop-up Modal -->
+    <div class="modal-overlay" id="security-modal" style="display: none;">
+        <div class="modal" style="text-align: center; max-width: 450px;">
+            <div
+                style="width: 64px; height: 64px; background: rgba(52, 199, 89, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="var(--accent-success)"
+                    style="width: 32px; height: 32px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+            </div>
+            <h3>Data Secured</h3>
+            <p>Your data is secured with **Karma Staff**. Your privacy and data security are our top priorities. All
+                reports are processed using enterprise-grade encryption.</p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="modal-btn" onclick="closeSecurityModal()"
+                    style="background: var(--accent-primary); color: white; width: 100%;">Got it, thanks!</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_BASE = '';
         let dashboards = [];
         let dashboardToDelete = null;
         let multiUploadFiles = [];
+        let currentUploadController = null;
+
+        // Security Modal Functions
+        function checkSecurityPopup() {
+            const hasSeen = localStorage.getItem('hasSeenSecurityPopupV2'); // V2 for new content
+            if (!hasSeen) {
+                document.getElementById('security-modal').style.display = 'flex';
+            }
+        }
+
+        function closeSecurityModal() {
+            document.getElementById('security-modal').style.display = 'none';
+            localStorage.setItem('hasSeenSecurityPopupV2', 'true');
+        }
 
         // Theme Management
         function initTheme() {
@@ -1117,13 +1180,20 @@
             const file = event.target.files[0];
             if (!file) return;
 
+            // Cancel any existing upload
+            if (currentUploadController) {
+                currentUploadController.abort();
+            }
+
+            currentUploadController = new AbortController();
+            const { signal } = currentUploadController;
+
             const uploadProgress = document.getElementById('upload-progress');
             const progressText = uploadProgress.querySelector('span');
 
             uploadProgress.style.display = 'block';
             progressText.innerText = 'Uploading and processing file...';
 
-            // If it's a PDF or potentially a large Excel, inform user it might take longer
             if (file.name.toLowerCase().endsWith('.pdf')) {
                 progressText.innerText = 'AI is converting your QuickBooks PDF... this may take 15-30 seconds.';
             }
@@ -1137,7 +1207,8 @@
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
-                    body: formData
+                    body: formData,
+                    signal: signal
                 });
 
                 if (!response.ok) {
@@ -1148,11 +1219,25 @@
                 const data = await response.json();
                 window.location.href = `/dashboard?id=${data.id}`;
             } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('Upload cancelled by user');
+                } else {
+                    alert('Error: ' + error.message);
+                }
                 uploadProgress.style.display = 'none';
-                alert('Error: ' + error.message);
+            } finally {
+                currentUploadController = null;
             }
 
             event.target.value = '';
+        }
+
+        function cancelUpload() {
+            if (currentUploadController) {
+                currentUploadController.abort();
+            }
+            document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('file-input').value = '';
         }
 
         // Multi-file upload functions
@@ -1337,6 +1422,7 @@
         initTheme();
         initUser();
         loadDashboards();
+        checkSecurityPopup();
     </script>
     <a href="https://karmastaff.com" target="_blank" rel="noopener noreferrer"
         style="position: fixed; bottom: 15px; right: 15px; z-index: 1000; opacity: 0.7; transition: opacity 0.2s;"
