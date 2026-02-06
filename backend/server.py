@@ -109,6 +109,14 @@ class QuickBooksFinalizeRequest(BaseModel):
     adjustments: Dict[str, Any]
 
 
+class UserPasswordUpdate(BaseModel):
+    new_password: str
+
+
+class UserRoleUpdate(BaseModel):
+    is_admin: bool
+
+
 # ============= Static File Serving =============
 
 @app.get("/")
@@ -219,21 +227,45 @@ async def create_new_user(user: UserCreate, current_user: dict = Depends(get_cur
     return {"id": user_id, "message": "User created successfully"}
 
 
-@app.delete("/api/admin/users/{user_id}")
-async def delete_user(user_id: int, current_user: dict = Depends(get_current_user)):
-    """Delete a user (admin only)."""
+    return {"message": "User deleted successfully"}
+
+
+@app.patch("/api/admin/users/{user_id}/password")
+async def update_user_password(
+    user_id: int, 
+    update: UserPasswordUpdate, 
+    current_user: dict = Depends(get_current_user)
+):
+    """Update a user's password (admin only)."""
     if not current_user['is_admin']:
         raise HTTPException(status_code=403, detail="Admin access required")
     
-    # Optional: Prevent self-deletion
-    if user_id == current_user['id']:
-        raise HTTPException(status_code=400, detail="Cannot delete your own account")
-        
-    success = db.delete_user(user_id)
+    success = db.update_user_password(user_id, update.new_password)
     if not success:
-        raise HTTPException(status_code=44, detail="User not found")
+        raise HTTPException(status_code=404, detail="User not found")
         
-    return {"message": "User deleted successfully"}
+    return {"message": "Password updated successfully"}
+
+
+@app.patch("/api/admin/users/{user_id}/role")
+async def update_user_role(
+    user_id: int, 
+    update: UserRoleUpdate, 
+    current_user: dict = Depends(get_current_user)
+):
+    """Update a user's role (admin only)."""
+    if not current_user['is_admin']:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Prevent self-demotion
+    if user_id == current_user['id']:
+        raise HTTPException(status_code=400, detail="Cannot change your own role")
+        
+    success = db.update_user_role(user_id, update.is_admin)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    return {"message": "User role updated successfully"}
 
 
 # ============= Dashboard API Endpoints =============

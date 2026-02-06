@@ -210,12 +210,26 @@ def get_all_users() -> List[Dict[str, Any]]:
     return [dict(row) for row in rows]
 
 
-def delete_user(user_id: int) -> bool:
-    """Delete a user and all their dashboards."""
+    return success
+
+
+def update_user_password(user_id: int, new_password: str) -> bool:
+    """Update a user's password."""
     conn = get_connection()
     cursor = conn.cursor()
-    # Cascading delete is handled by foreign key in database schema
-    cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    password_hash = get_hash(new_password)
+    cursor.execute("UPDATE users SET password_hash = ? WHERE id = ?", (password_hash, user_id))
+    success = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
+    return success
+
+
+def update_user_role(user_id: int, is_admin: bool) -> bool:
+    """Update a user's admin status."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET is_admin = ? WHERE id = ?", (1 if is_admin else 0, user_id))
     success = cursor.rowcount > 0
     conn.commit()
     conn.close()
