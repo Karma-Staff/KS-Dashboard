@@ -21,11 +21,59 @@ def analyze_data(csv_path=None, df=None):
     # Standardize column names (in case of leading/trailing spaces)
     df.columns = [c.strip() for c in df.columns]
     
+    # Normalize Category values to expected format
+    category_map = {
+        'cogs': 'Cost of Goods Sold',
+        'cost of goods sold': 'Cost of Goods Sold',
+        'expense': 'Expenses',
+        'expenses': 'Expenses',
+        'income': 'Income',
+        'revenue': 'Income'
+    }
+    df['Category'] = df['Category'].apply(
+        lambda x: category_map.get(str(x).strip().lower(), x) if pd.notna(x) else x
+    )
+    
+    # Normalize Month values (handle full month names)
+    month_name_map = {
+        'january': 'Jan', 'february': 'Feb', 'march': 'Mar', 'april': 'Apr',
+        'may': 'May', 'june': 'Jun', 'july': 'Jul', 'august': 'Aug',
+        'september': 'Sep', 'october': 'Oct', 'november': 'Nov', 'december': 'Dec',
+        'jan': 'Jan', 'feb': 'Feb', 'mar': 'Mar', 'apr': 'Apr',
+        'jun': 'Jun', 'jul': 'Jul', 'aug': 'Aug', 'sep': 'Sep', 'sept': 'Sep',
+        'oct': 'Oct', 'nov': 'Nov', 'dec': 'Dec', 'ytd': 'YTD', 'total': 'YTD'
+    }
+    df['Month'] = df['Month'].apply(
+        lambda x: month_name_map.get(str(x).strip().lower(), x) if pd.notna(x) else x
+    )
+    
+    # Filter out summary/total rows that would cause double-counting
+    summary_patterns = [
+        'total income', 'total expenses', 'total cost of goods sold', 
+        'total cogs', 'total other income', 'total other expenses',
+        'net income', 'net other income', 'net operating income', 
+        'gross profit', 'net profit'
+    ]
+    
+    def is_summary_row(account):
+        if pd.isna(account):
+            return False
+        account_lower = str(account).strip().lower()
+        # Check if it's an exact match to summary patterns
+        if account_lower in summary_patterns:
+            return True
+        # Check if it starts with "Total " or "Total for"
+        if account_lower.startswith('total ') or account_lower.startswith('total for '):
+            return True
+        return False
+    
+    df = df[~df['Account'].apply(is_summary_row)].copy()
+    
     # All branches list
     branches = sorted(df['Company'].unique().tolist())
     
-    # Month order for sorting
-    month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    # Month order for sorting (including YTD for year-to-date reports)
+    month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'YTD']
     
     # Helper to calculate metrics for a dataframe
     def get_metrics(target_df):

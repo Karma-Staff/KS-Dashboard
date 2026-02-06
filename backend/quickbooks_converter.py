@@ -37,6 +37,46 @@ MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 # Valid categories
 VALID_CATEGORIES = ['Income', 'Cost of Goods Sold', 'Expenses']
 
+# Debug output folder (relative to this file's directory)
+DEBUG_OUTPUT_DIR = os.path.join(os.path.dirname(__file__), 'training_data', 'outputs')
+
+
+def save_debug_output(filename: str, ai_result: Dict[str, Any], 
+                      validated_data: List[Dict] = None) -> str:
+    """
+    Save AI extraction results for debugging and training purposes.
+    Returns the path to the saved CSV file.
+    """
+    os.makedirs(DEBUG_OUTPUT_DIR, exist_ok=True)
+    
+    # Create a safe filename from the original
+    base_name = os.path.splitext(os.path.basename(filename))[0]
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    output_prefix = f"{base_name}_{timestamp}"
+    
+    # Save the raw AI JSON response
+    json_path = os.path.join(DEBUG_OUTPUT_DIR, f"{output_prefix}_raw.json")
+    with open(json_path, 'w', encoding='utf-8') as f:
+        # Remove internal data arrays to keep JSON readable
+        ai_copy = {k: v for k, v in ai_result.items() if k != 'data'}
+        ai_copy['data_row_count'] = len(ai_result.get('data', []))
+        json.dump(ai_copy, f, indent=2, ensure_ascii=False)
+    
+    # Save the extracted data as CSV
+    csv_path = os.path.join(DEBUG_OUTPUT_DIR, f"{output_prefix}_extracted.csv")
+    if validated_data:
+        df = pd.DataFrame(validated_data)
+    elif ai_result.get('data'):
+        df = pd.DataFrame(ai_result['data'])
+    else:
+        df = pd.DataFrame()
+    
+    if len(df) > 0:
+        df.to_csv(csv_path, index=False)
+    
+    print(f"[DEBUG] Saved extraction output to: {csv_path}")
+    return csv_path
+
 
 def detect_file_type(filename: str, content: bytes) -> str:
     """Detect the file type from filename and content."""
@@ -107,20 +147,47 @@ OUTPUT FORMAT - Return a valid JSON object with this exact structure:
     "csv_data": "Account|Category|Jan|Feb|Mar|...\\nMitigation Revenue|Income|1000.00|2000.00|1500.00|..."
 }}
 
+CATEGORY RULES:
+1. Category MUST be exactly one of: "Income", "Cost of Goods Sold", or "Expenses"
+2. "Other Income" section items (like Cash Back Reward, Earned Interest, Late Fee Income) → categorize as "Income"
+3. "Other Expenses" section items → categorize as "Expenses"
+4. Main "Income" section items → "Income"
+5. "Cost of Goods Sold" section items → "Cost of Goods Sold"
+6. "Expenses" section items → "Expenses"
+
 RULES FOR csv_data:
 1. Use '|' (pipe) as the delimiter.
-2. Headers MUST be: Account|Category|LIST_OF_MONTHS_FOUND
-3. Category MUST be exactly: "Income", "Cost of Goods Sold", or "Expenses"
-4. CHRONOLOGICAL ORDER: Month columns in the CSV headers MUST follow the exact chronological order (Jan, Feb, Mar...) found in the report.
-5. SKIP SUMMARIES: Skip ONLY the final category totals (e.g., "Total Income", "Total Cost of Goods Sold", "Total Expenses", "Gross Profit", "Net Income"). 
-6. SUB-TOTAL SKIPPING: Skip a row ONLY if its value is exactly the sum of sub-items *already extracted*. If a row has sub-items but it contains additional unique value not found in sub-items, KEEP IT.
-7. CRITICAL PRESERVATION: Account rows like "TOTAL COST OF GOODS SOLD" or "TOTAL LABOR" are often unique accounts in this report. If they contain data lines and are NOT the final category total, PRESERVE them.
-8. PRESERVE all unique account line items, even if they have similar names.
-9. CRITICALLY: Do NOT merge or remove rows just because they have similar names (e.g., "TOTAL COST OF GOODS SOLD" and "Total TOTAL COST OF GOODS SOLD" are DIFFERENT accounts - keep BOTH).
+2. Headers MUST be: Account|Category|LIST_OF_PERIODS_FOUND
+3. For monthly reports: Use month columns in chronological order (Jan, Feb, Mar...)
+4. For YTD/annual reports (no monthly breakdown): Use a single "Total" column
+   - Example header: Account|Category|Total
+   - Example row: REV - Water Emergency|Income|656822.37
+
+WHAT TO SKIP (and ONLY these):
+- Skip ONLY final category summary rows: "Total Income", "Total Other Income", "Total Cost of Goods Sold", "Total Expenses", "Total Other Expenses"
+- Skip calculation rows: "Gross Profit", "Net Operating Income", "Net Other Income", "Net Income"
+- Skip percentage rows (% of income) and completely blank rows
+
+WHAT TO KEEP (CRITICAL - preserve these accounts):
+- Keep ALL individual account line items with data, even if they have "Total" in the name
+- Example: "TOTAL COST OF GOODS SOLD" as an ACCOUNT NAME (not the category total) must be KEPT
+- Keep parent account rows that have their own data values
+- Keep sub-account totals that are NOT the final category total
+- When in doubt, KEEP the row
+
+NESTED STRUCTURE EXAMPLE:
+If you see:
+  Cost of Goods Sold (header)
+    Cost of Goods Sold     22211.85  12784.92  <- KEEP (account with data)
+    TOTAL COST OF GOODS SOLD  2350  14971.22  <- KEEP (different account)
+      Contractors COGS       320    3550     <- KEEP
+      Purchases              4770   11080    <- KEEP
+    Total TOTAL COST OF GOODS SOLD  43112    <- SKIP (it's sum of above)
+  Total Cost of Goods Sold  65324  74363     <- SKIP (final category total)
+
 10. Remove account codes like "4000 · " from account names.
-11. Include ALL months found. Use 0.00 for empty months or months with no data for that account.
+11. Include ALL months found. Use 0.00 for empty months.
 12. One row per account only, with amounts for all months in that same row.
-13. Skip percentage rows and blank rows only.
 
 Here is the financial report to parse:
 
@@ -173,16 +240,32 @@ Return ONLY the JSON object.
     if 'csv_data' in result:
         data_rows = []
         csv_lines = result['csv_data'].strip().split('\n')
-        if len(csv_lines) > 1:
-            headers = [h.strip() for h in csv_lines[0].split('|')]
+        if len(csv_lines) >= 1:
+            # Check if first line is a header or data row
+            first_line_parts = [h.strip() for h in csv_lines[0].split('|')]
             
-            # Robust month mapping
+            # Detect if it's a header row (contains Account/Category/Month names)
+            first_col_lower = first_line_parts[0].lower() if first_line_parts else ''
+            has_header = first_col_lower in ['account', 'distribution account', 'name', 'description']
+            
+            if has_header and len(csv_lines) > 1:
+                headers = first_line_parts
+                data_start = 1
+            else:
+                # No header row - assume 3-column format: Account|Category|Amount
+                headers = ['Account', 'Category', 'Total']
+                data_start = 0
+            
+            # Robust month/period mapping
             month_indices = {}
             for i, h in enumerate(headers):
                 h_clean = h.strip().rstrip('.').capitalize()
                 # Check for standard 3-letter codes
                 if h_clean in MONTH_NAMES:
                     month_indices[h_clean] = i
+                # Check for YTD/Total column (for reports without monthly breakdown)
+                elif h_clean in ['Total', 'Ytd', 'Year', 'Annual', 'Amount']:
+                    month_indices['YTD'] = i
                 # Check for full names
                 else:
                     for std_m in MONTH_NAMES:
@@ -194,7 +277,11 @@ Return ONLY the JSON object.
                             month_indices['Sep'] = i
                             break
             
-            for line in csv_lines[1:]:
+            # If still no month indices found but we have 3+ columns, assume column 2+ are amounts
+            if not month_indices and len(headers) >= 3:
+                month_indices['YTD'] = 2  # Third column is the amount
+            
+            for line in csv_lines[data_start:]:
                 parts = [p.strip() for p in line.split('|')]
                 if len(parts) >= 3:
                     account = parts[0]
@@ -243,7 +330,32 @@ def validate_and_format_data(ai_result: Dict[str, Any], company_override: str = 
     
     validated_data = []
     
+    # Summary patterns to filter out (prevent double-counting)
+    summary_patterns = [
+        'total income', 'total expenses', 'total cost of goods sold', 
+        'total cogs', 'total other income', 'total other expenses',
+        'net income', 'net other income', 'net operating income', 
+        'gross profit', 'net profit'
+    ]
+    
+    def is_summary_row(account):
+        if not account:
+            return False
+        account_lower = str(account).strip().lower()
+        # Check exact match to summary patterns
+        if account_lower in summary_patterns:
+            return True
+        # Check if it starts with "Total " or "Total for"
+        if account_lower.startswith('total ') or account_lower.startswith('total for '):
+            return True
+        return False
+    
     for item in ai_result.get('data', []):
+        # Skip summary rows
+        account_name = item.get('Account', '')
+        if is_summary_row(account_name):
+            continue
+        
         # Validate category
         category = item.get('Category', 'Expenses')
         if category not in VALID_CATEGORIES:
@@ -256,15 +368,18 @@ def validate_and_format_data(ai_result: Dict[str, Any], company_override: str = 
             else:
                 category = 'Expenses'
         
-        # Validate month
+        # Validate month/period (allow YTD for year-to-date reports)
         month = item.get('Month', 'Jan')
-        if month not in MONTH_NAMES:
+        valid_periods = MONTH_NAMES + ['YTD']
+        if month not in valid_periods:
             # Try to match
             month_lower = month.lower()[:3].capitalize()
             if month_lower in MONTH_NAMES:
                 month = month_lower
+            elif month.lower() in ['total', 'ytd', 'year', 'annual']:
+                month = 'YTD'
             else:
-                continue  # Skip invalid month
+                continue  # Skip invalid month/period
         
         # Validate amount
         try:
@@ -365,6 +480,7 @@ def finalize_conversion(ai_result: Dict[str, Any], user_adjustments: Dict[str, A
 def convert_quickbooks_file(content: bytes, filename: str, api_key: str = None) -> pd.DataFrame:
     """
     Direct conversion without preview (for backward compatibility).
+    Saves debug output for visibility into AI extraction.
     """
     
     if not api_key:
@@ -376,7 +492,17 @@ def convert_quickbooks_file(content: bytes, filename: str, api_key: str = None) 
     text_content = extract_text_from_file(content, filename, file_type)
     ai_result = convert_with_gemini(text_content, api_key)
     
-    return finalize_conversion(ai_result)
+    # Get validated data
+    df = finalize_conversion(ai_result)
+    
+    # Save debug output for training/visibility
+    try:
+        validated_list = df.to_dict('records') if len(df) > 0 else []
+        save_debug_output(filename, ai_result, validated_list)
+    except Exception as e:
+        print(f"[DEBUG] Warning: Could not save debug output: {e}")
+    
+    return df
 
 
 # Test function
